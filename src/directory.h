@@ -12,6 +12,7 @@ public:
     ~Directory() = default;
 
     Data Get( const Key& key ) const;
+    void Put( const Key& key, const Data& data );
 
 private:
     std::size_t GetEntryId( const Key &key ) const;

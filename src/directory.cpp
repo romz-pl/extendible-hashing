@@ -45,3 +45,11 @@ std::size_t Directory::GetEntryId( const Key& key ) const
     assert( ret < m_dir.size() );
     return ret;
 }
+
+//
+//
+//
+void Directory::Put( const Key& /*key*/, const Data& /*data*/ )
+{
+
+}
