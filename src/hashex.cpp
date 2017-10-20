@@ -20,9 +20,9 @@ Data HashEx::Get( const Key& key ) const
 //
 //
 //
-void HashEx::Put( const Key& /*key*/, const Data& /*data*/ )
+void HashEx::Put( const Key& key, const Data& data )
 {
-    assert( 0 );
+    m_dir.Put( key, data );
 }
 
 //
