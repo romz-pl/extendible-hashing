@@ -22,6 +22,7 @@ VPATH := ../src/
 # Source files (listed in alphabetical order)
 
 SOURCE :=
+SOURCE += hashex.cpp
 SOURCE += main.cpp
 
 
