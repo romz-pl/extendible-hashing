@@ -29,7 +29,17 @@ bool Key::operator== (const Key& key ) const
 //
 //
 //
+bool Key::operator!= (const Key& key ) const
+{
+    return !( m_value == key.m_value );
+}
+
+/*
+//
+//
+//
 bool Key::operator< (const Key& key ) const
 {
     return m_value < key.m_value;
 }
+*/

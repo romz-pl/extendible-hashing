@@ -12,7 +12,9 @@ public:
     std::size_t GetHash() const;
 
     bool operator== (const Key& key ) const;
-    bool operator< (const Key& key ) const;
+    bool operator!= (const Key& key ) const;
+
+    // bool operator< (const Key& key ) const;
 
 private:
     std::uint32_t m_value;
