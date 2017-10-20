@@ -2,12 +2,13 @@
 #include "hashex.h"
 
 void TestGet();
+void TestPut();
 
 int main()
 {
     try
     {
-        TestGet();
+        TestPut();
     }
     catch( std::exception& e )
     {
@@ -29,3 +30,19 @@ void TestGet()
     Data data = he.Get( key );
 }
 
+//
+//
+//
+void TestPut()
+{
+    HashEx he;
+    Key key( 1 );
+    Data data( "abc-1" );
+    he.Put( key, data );
+
+    key = Key( 3 );
+    data = Data( "abc-3" );
+    he.Put( key, data );
+
+    // he.Put( key, data );
+}

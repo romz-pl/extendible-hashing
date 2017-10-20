@@ -24,3 +24,11 @@ Data Bucket::Get( const Key& key ) const
     }
     return m_data;
 }
+
+//
+//
+//
+Key Bucket::GetKey( ) const
+{
+    return m_key;
+}
