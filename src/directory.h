@@ -1,7 +1,7 @@
 #ifndef HASHEX_DIRECTORY_H
 #define HASHEX_DIRECTORY_H
 
-#include "entry.h"
+#include "bucket.h"
 #include <vector>
 #include "data.h"
 
@@ -19,7 +19,7 @@ private:
 private:
     std::uint32_t m_globalDepth;
 
-    std::vector< Entry > m_dir;
+    std::vector< Bucket* > m_dir;
 
 };
 

@@ -2,17 +2,20 @@
 #define HASHEX_BUCKET_H
 
 #include "data.h"
+#include "key.h"
 
 class Bucket
 {
 public:
-    Bucket();
+    Bucket( const Key& key, const Data& data );
     ~Bucket() = default;
 
-    Data Get( ) const;
+    Data Get( const Key &key ) const;
 
 private:
     std::uint32_t m_localDepth;
+
+    Key m_key;
 
     Data m_data;
 };

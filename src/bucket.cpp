@@ -1,10 +1,13 @@
 #include "bucket.h"
+#include <stdexcept>
 
 //
 //
 //
-Bucket::Bucket()
+Bucket::Bucket( const Key& key, const Data& data )
     : m_localDepth( 0 )
+    , m_key( key )
+    , m_data( data )
 {
 
 }
@@ -13,7 +16,11 @@ Bucket::Bucket()
 //
 //
 //
-Data Bucket::Get( ) const
+Data Bucket::Get( const Key& key ) const
 {
+    if( key != m_key )
+    {
+        throw std::runtime_error( "Bucket::Get: Key not found." );
+    }
     return m_data;
 }
