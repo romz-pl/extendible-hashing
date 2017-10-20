@@ -22,7 +22,12 @@ VPATH := ../src/
 # Source files (listed in alphabetical order)
 
 SOURCE :=
+SOURCE += bucket.cpp
+SOURCE += data.cpp
+SOURCE += directory.cpp
+SOURCE += entry.cpp
 SOURCE += hashex.cpp
+SOURCE += key.cpp
 SOURCE += main.cpp
 
 

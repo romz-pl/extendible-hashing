@@ -4,6 +4,15 @@
 //
 //
 //
+HashEx::HashEx()
+    : m_globalDepth( 0 )
+{
+
+}
+
+//
+//
+//
 Data HashEx::Get( const Key& /*key*/ ) const
 {
     assert( 0 );
