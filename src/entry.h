@@ -3,17 +3,20 @@
 
 #include "key.h"
 #include "bucket.h"
+#include "data.h"
 
 class Entry
 {
 public:
-    Entry() = default;
+    Entry();
     ~Entry() = default;
+
+    Data Get( const Key& key ) const;
 
 private:
     Key m_key;
 
-    Bucket m_bucket;
+    Bucket *m_bucket;
 };
 
 
