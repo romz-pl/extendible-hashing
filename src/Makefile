@@ -24,6 +24,7 @@ VPATH := ../src/
 SOURCE :=
 SOURCE += bucket.cpp
 SOURCE += data.cpp
+SOURCE += directory.cpp
 SOURCE += hashex.cpp
 SOURCE += key.cpp
 SOURCE += main.cpp
