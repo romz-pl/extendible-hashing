@@ -17,7 +17,6 @@ int main()
 
     std::cout << "OK\n" << std::flush;
     return 0;
-
 }
 
 //
