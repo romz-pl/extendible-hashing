@@ -4,7 +4,8 @@
 #include <string>
 
 using Data = std::string;
-using Key = std::uint32_t;
+
+#include "key.h"
 
 class HashEx
 {
