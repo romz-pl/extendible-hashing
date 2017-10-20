@@ -17,8 +17,6 @@ public:
     void Delete( const Key& key );
 
 private:
-    std::uint32_t m_globalDepth;
-
     Directory m_dir;
 
 };

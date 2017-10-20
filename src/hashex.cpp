@@ -5,7 +5,6 @@
 //
 //
 HashEx::HashEx()
-    : m_globalDepth( 0 )
 {
 
 }
@@ -13,10 +12,9 @@ HashEx::HashEx()
 //
 //
 //
-Data HashEx::Get( const Key& /*key*/ ) const
+Data HashEx::Get( const Key& key ) const
 {
-    assert( 0 );
-    return Data();
+    return m_dir.Get( key );
 }
 
 //
