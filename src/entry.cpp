@@ -5,8 +5,9 @@
 //
 //
 //
-Entry::Entry()
-    : m_bucket( nullptr )
+Entry::Entry( const Key& key )
+    : m_key ( key )
+    , m_bucket( nullptr )
 {
 
 }

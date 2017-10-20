@@ -8,7 +8,7 @@
 class Entry
 {
 public:
-    Entry();
+    Entry( const Key& key );
     ~Entry() = default;
 
     Data Get( const Key& key ) const;

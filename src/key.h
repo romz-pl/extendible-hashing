@@ -6,7 +6,7 @@
 class Key
 {
 public:
-    Key() = default;
+    Key( std::uint32_t value );
     ~Key() = default;
 
     std::uint32_t GetHash() const;

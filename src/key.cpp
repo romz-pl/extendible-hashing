@@ -1,5 +1,10 @@
 #include "key.h"
 
+Key::Key( std::uint32_t value )
+    : m_value( value )
+{
+
+}
 
 //
 //
