@@ -12,6 +12,8 @@ public:
 
     Data Get( const Key &key ) const;
 
+    Key GetKey( ) const;
+
 private:
     std::uint32_t m_localDepth;
 
