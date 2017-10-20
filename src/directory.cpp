@@ -6,9 +6,19 @@
 //
 //
 Directory::Directory()
-    : m_globalDepth( 0 )
+    : m_globalDepth( 1 )
 {
+    const std::size_t size = ( 1 << m_globalDepth );
+    m_dir.resize( size, nullptr );
+}
 
+//
+//
+//
+Directory::~Directory()
+{
+    for( auto b : m_dir )
+        delete b;
 }
 
 //
@@ -49,7 +59,31 @@ std::size_t Directory::GetEntryId( const Key& key ) const
 //
 //
 //
-void Directory::Put( const Key& /*key*/, const Data& /*data*/ )
+void Directory::Put( const Key& key, const Data& data )
 {
+    std::size_t id = GetEntryId( key );
+    if( !m_dir[ id ] )
+    {
+        m_dir[ id ] = new Bucket( key, data );
+        return;
+    }
+
+    if( m_dir[ id ]->GetKey() == key )
+    {
+        throw std::runtime_error( "Key already inserted" );
+    }
+
+    Bucket* p = m_dir[ id ];
+    m_dir[ id ] = nullptr;
+
+    m_globalDepth++;
+    const std::vector< Bucket* > tmp = m_dir;
+    m_dir.insert( m_dir.end(), tmp.begin(), tmp.end() );
+    id = GetEntryId( p->GetKey() );
+    m_dir[ id ] = p;
+
+    Put( key, data );
+
+
 
 }
