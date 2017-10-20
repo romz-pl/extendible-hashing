@@ -1,7 +1,7 @@
 #ifndef HASHEX_DIRECTORY_H
 #define HASHEX_DIRECTORY_H
 
-#include "bucket.h"
+#include "entry.h"
 #include <vector>
 
 class Directory
@@ -11,7 +11,7 @@ public:
     ~Directory() = default;
 
 private:
-    std::vector< Bucket* > m_dir;
+    std::vector< Entry > m_dir;
 
 };
 
