@@ -9,6 +9,8 @@ public:
     Bucket();
     ~Bucket() = default;
 
+    Data Get( ) const;
+
 private:
     std::uint32_t m_localDepth;
 
