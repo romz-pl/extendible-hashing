@@ -9,10 +9,12 @@ public:
     Key( std::uint32_t value );
     ~Key() = default;
 
-    std::uint32_t GetHash() const;
+    std::size_t GetHash() const;
 
     bool operator== (const Key& key ) const;
-    bool operator< (const Key& key ) const;
+    bool operator!= (const Key& key ) const;
+
+    // bool operator< (const Key& key ) const;
 
 private:
     std::uint32_t m_value;
