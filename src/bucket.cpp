@@ -9,3 +9,11 @@ Bucket::Bucket()
 
 }
 
+
+//
+//
+//
+Data Bucket::Get( ) const
+{
+    return m_data;
+}
