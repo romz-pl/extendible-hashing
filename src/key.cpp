@@ -1,4 +1,5 @@
 #include "key.h"
+#include <functional>
 
 Key::Key( std::uint32_t value )
     : m_value( value )
@@ -9,9 +10,11 @@ Key::Key( std::uint32_t value )
 //
 //
 //
-std::uint32_t Key::GetHash() const
+std::size_t Key::GetHash() const
 {
-    return m_value;
+    const std::hash< std::uint32_t > fun;
+    const std::size_t ret = fun( m_value );
+    return ret;
 }
 
 //
