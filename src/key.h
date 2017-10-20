@@ -9,8 +9,13 @@ public:
     Key() = default;
     ~Key() = default;
 
+    std::uint32_t GetHash() const;
+
+    bool operator== (const Key& key ) const;
+    bool operator< (const Key& key ) const;
+
 private:
-    std::uint32_t m_key;
+    std::uint32_t m_value;
 };
 
 #endif
