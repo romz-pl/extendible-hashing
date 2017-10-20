@@ -1,10 +1,8 @@
 #ifndef HASHEX_HASHEX_H
 #define HASHEX_HASHEX_H
 
-#include <string>
 
-using Data = std::string;
-
+#include "data.h"
 #include "key.h"
 
 class HashEx
