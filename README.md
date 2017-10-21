@@ -2,7 +2,7 @@
 
 1. Implementation of extendible hashing in C++
 
-2. This is the refactored project https://github.com/nitish6174/extendible-hashing
+2. This is the refactored, simpyfied and  improved https://github.com/nitish6174/extendible-hashing project
 
 3. The implemenation is based on the book:
 R. Ramakrishnan, J. Gehrke "DATABASE MANAGEMENT SYSTEMS" (third edition)
