@@ -1,116 +1,121 @@
 #include "bucket.h"
-#include <stdexcept>
-#include <cassert>
 #include <iostream>
 
-//
-//
-//
-Bucket::Bucket( uint32_t localDepth )
-    : m_empty( true )
-    , m_localDepth( localDepth )
-{
+/* Bucket class functions */
 
+Bucket::Bucket(int depth, int size)
+{
+    this->depth = depth;
+    this->size = size;
 }
 
-//
-//
-//
-Bucket::Bucket( const Key& key, const Data& data, uint32_t localDepth )
-    : m_empty( false )
-    , m_localDepth( localDepth )
-    , m_key( key )
+int Bucket::insert(int key, string value)
 {
-    m_data = data;
+    std::map<int,string>::iterator it;
+    it = values.find(key);
+    if(it!=values.end())
+        return -1;
+    if(isFull())
+        return 0;
+    values[key] = value;
+    return 1;
 }
 
-
-//
-//
-//
-Data Bucket::Get( const Key& key ) const
+int Bucket::remove(int key)
 {
-    if( m_empty )
+    std::map<int,string>::iterator it;
+    it = values.find(key);
+    if(it!=values.end())
     {
-        throw std::runtime_error( "Bucket::Get: Empty bucket." );
+        values.erase(it);
+        return 1;
     }
-
-    if( key != m_key )
+    else
     {
-        throw std::runtime_error( "Bucket::Get: Key not found." );
+        cout<<"Cannot remove : This key does not exists"<<endl;
+        return 0;
     }
-    return m_data;
 }
 
-//
-//
-//
-Key Bucket::GetKey( ) const
+int Bucket::update(int key, string value)
 {
-    assert( !m_empty );
-    return m_key;
+    std::map<int,string>::iterator it;
+    it = values.find(key);
+    if(it!=values.end())
+    {
+        values[key] = value;
+        cout<<"Value updated"<<endl;
+        return 1;
+    }
+    else
+    {
+        cout<<"Cannot update : This key does not exists"<<endl;
+        return 0;
+    }
 }
 
-//
-//
-//
-Data Bucket::GetData( ) const
+void Bucket::search(int key)
 {
-    assert( !m_empty );
-    return m_data;
+    std::map<int,string>::iterator it;
+    it = values.find(key);
+    if(it!=values.end())
+    {
+        cout<<"Value = "<<it->second<<endl;
+    }
+    else
+    {
+        cout<<"This key does not exists"<<endl;
+    }
 }
 
-//
-//
-//
-bool Bucket::IsFull() const
+int Bucket::isFull(void)
 {
-    return !m_empty;
+    if(values.size()==size)
+        return 1;
+    else
+        return 0;
 }
 
-//
-//
-//
-void Bucket::Put( const Key& key, const Data& data )
+int Bucket::isEmpty(void)
 {
-    assert( m_empty );
-
-    m_key = key;
-    m_data = data;
-    m_empty = false;
+    if(values.size()==0)
+        return 1;
+    else
+        return 0;
 }
 
-//
-//
-//
-std::uint32_t Bucket::GetLocalDepth() const
+int Bucket::getDepth(void)
 {
-    return m_localDepth;
+    return depth;
 }
 
-//
-//
-//
-void Bucket::SetLocalDepth( std::uint32_t depth )
+int Bucket::increaseDepth(void)
 {
-    m_localDepth = depth;
+    depth++;
+    return depth;
 }
 
-//
-//
-//
-void Bucket::SetEmpty()
+int Bucket::decreaseDepth(void)
 {
-    m_empty = true;
+    depth--;
+    return depth;
 }
 
-//
-//
-//
-void Bucket::Print() const
+std::map<int, string> Bucket::copy(void)
 {
-    std::cout << std::boolalpha << m_empty << "; ";
-    std::cout << "Local-Depth=" << m_localDepth << "; ";
-    std::cout << "Key=" << m_key.m_value << "; ";
-    std::cout << std::flush << std::endl;
+    std::map<int, string> temp(values.begin(),values.end());
+    return temp;
+}
+
+void Bucket::clear(void)
+{
+    values.clear();
+}
+
+void Bucket::display()
+{
+    std::map<int,string>::iterator it;
+    for(it=values.begin();it!=values.end();it++)
+        cout<<it->first<<" ";
+    cout<<endl;
 }

@@ -4,7 +4,8 @@
 //
 //
 //
-HashEx::HashEx()
+HashEx::HashEx( int depth, int bucket_size )
+    : m_dir( depth, bucket_size )
 {
 
 }
@@ -14,7 +15,8 @@ HashEx::HashEx()
 //
 Data HashEx::Get( const Key& key ) const
 {
-    return m_dir.Get( key );
+    return Data();
+    // return m_dir.search( key );
 }
 
 //
@@ -22,7 +24,7 @@ Data HashEx::Get( const Key& key ) const
 //
 void HashEx::Put( const Key& key, const Data& data )
 {
-    m_dir.Put( key, data );
+    // m_dir.insert( key.m, data, false );
 }
 
 //
@@ -30,7 +32,7 @@ void HashEx::Put( const Key& key, const Data& data )
 //
 void HashEx::Delete( const Key& /*key*/ )
 {
-    assert( 0 );
+    // m_dir.remove( key, 2 );
 }
 
 //
@@ -38,5 +40,5 @@ void HashEx::Delete( const Key& /*key*/ )
 //
 void HashEx::Print() const
 {
-    m_dir.Print();
+    // m_dir.display( true );
 }

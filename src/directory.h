@@ -1,34 +1,26 @@
 #ifndef HASHEX_DIRECTORY_H
 #define HASHEX_DIRECTORY_H
 
-#include "bucket.h"
 #include <vector>
-#include "data.h"
+#include "bucket.h"
 
-class Directory
-{
-public:
-    Directory();
-    ~Directory();
-
-    Data Get( const Key& key ) const;
-    void Put( const Key& key, const Data& data );
-
-    void Print() const;
-
-private:
-    std::size_t GetEntryId( const Key &key ) const;
-
-    Bucket* NewBucket( std::uint32_t depth );
-    Bucket* NewBucket( const Key& key, const Data& data, std::uint32_t depth );
-
-private:
-    std::uint32_t m_globalDepth;
-
-    std::vector< Bucket* > m_dir;
-
-    std::vector< Bucket* > m_pool;
-
+class Directory {
+        int global_depth, bucket_size;
+        std::vector<Bucket*> buckets;
+        int hash(int n);
+        int pairIndex(int bucket_no, int depth);
+        void grow(void);
+        void shrink(void);
+        void split(int bucket_no);
+        void merge(int bucket_no);
+        string bucket_id(int n);
+    public:
+        Directory(int depth, int bucket_size);
+        void insert(int key,string value,bool reinserted);
+        void remove(int key,int mode);
+        void update(int key, string value);
+        void search(int key);
+        void display(bool duplicates);
 };
 
 #endif
