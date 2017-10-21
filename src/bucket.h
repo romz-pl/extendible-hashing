@@ -3,6 +3,7 @@
 
 #include "data.h"
 #include "key.h"
+#include <forward_list>
 
 class Bucket
 {
@@ -20,7 +21,9 @@ private:
 
     Key m_key;
 
-    Data m_data;
+    // Here should be:
+    // std::optional< Data > m_data;
+    std::forward_list< Data > m_data;
 };
 
 #endif
