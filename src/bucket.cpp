@@ -1,7 +1,6 @@
 #include "bucket.h"
 #include <iostream>
 
-/* Bucket class functions */
 
 Bucket::Bucket(int depth, int size)
 {
@@ -9,9 +8,9 @@ Bucket::Bucket(int depth, int size)
     this->size = size;
 }
 
-int Bucket::insert(int key, string value)
+int Bucket::insert(int key, std::string value)
 {
-    std::map<int,string>::iterator it;
+    std::map<int,std::string>::iterator it;
     it = values.find(key);
     if(it!=values.end())
         return -1;
@@ -23,7 +22,7 @@ int Bucket::insert(int key, string value)
 
 int Bucket::remove(int key)
 {
-    std::map<int,string>::iterator it;
+    std::map<int,std::string>::iterator it;
     it = values.find(key);
     if(it!=values.end())
     {
@@ -32,39 +31,39 @@ int Bucket::remove(int key)
     }
     else
     {
-        cout<<"Cannot remove : This key does not exists"<<endl;
+        std::cout<<"Cannot remove : This key does not exists"<<std::endl;
         return 0;
     }
 }
 
-int Bucket::update(int key, string value)
+int Bucket::update(int key, std::string value)
 {
-    std::map<int,string>::iterator it;
+    std::map<int,std::string>::iterator it;
     it = values.find(key);
     if(it!=values.end())
     {
         values[key] = value;
-        cout<<"Value updated"<<endl;
+        std::cout<<"Value updated"<<std::endl;
         return 1;
     }
     else
     {
-        cout<<"Cannot update : This key does not exists"<<endl;
+        std::cout<<"Cannot update : This key does not exists"<<std::endl;
         return 0;
     }
 }
 
 void Bucket::search(int key)
 {
-    std::map<int,string>::iterator it;
+    std::map<int,std::string>::iterator it;
     it = values.find(key);
     if(it!=values.end())
     {
-        cout<<"Value = "<<it->second<<endl;
+        std::cout<<"Value = "<<it->second<<std::endl;
     }
     else
     {
-        cout<<"This key does not exists"<<endl;
+        std::cout<<"This key does not exists"<<std::endl;
     }
 }
 
@@ -101,9 +100,9 @@ int Bucket::decreaseDepth(void)
     return depth;
 }
 
-std::map<int, string> Bucket::copy(void)
+std::map<int, std::string> Bucket::copy(void)
 {
-    std::map<int, string> temp(values.begin(),values.end());
+    std::map<int, std::string> temp(values.begin(),values.end());
     return temp;
 }
 
@@ -114,8 +113,8 @@ void Bucket::clear(void)
 
 void Bucket::display()
 {
-    std::map<int,string>::iterator it;
+    std::map<int,std::string>::iterator it;
     for(it=values.begin();it!=values.end();it++)
-        cout<<it->first<<" ";
-    cout<<endl;
+        std::cout<<it->first<<" ";
+    std::cout<<std::endl;
 }

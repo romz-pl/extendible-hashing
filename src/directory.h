@@ -13,12 +13,12 @@ class Directory {
         void shrink(void);
         void split(int bucket_no);
         void merge(int bucket_no);
-        string bucket_id(int n);
+        std::string bucket_id(int n);
     public:
         Directory(int depth, int bucket_size);
-        void insert(int key,string value,bool reinserted);
+        void insert(int key,std::string value,bool reinserted);
         void remove(int key,int mode);
-        void update(int key, string value);
+        void update(int key, std::string value);
         void search(int key);
         void display(bool duplicates);
 };

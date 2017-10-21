@@ -51,8 +51,8 @@ void Directory::shrink(void)
 void Directory::split(int bucket_no)
 {
     int local_depth,pair_index,index_diff,dir_size,i;
-    map<int, string> temp;
-    map<int, string>::iterator it;
+    std::map<int, std::string> temp;
+    std::map<int, std::string>::iterator it;
 
     local_depth = buckets[bucket_no]->increaseDepth();
     if(local_depth>global_depth)
@@ -92,10 +92,10 @@ void Directory::merge(int bucket_no)
     }
 }
 
-string Directory::bucket_id(int n)
+std::string Directory::bucket_id(int n)
 {
     int d;
-    string s;
+    std::string s;
     d = buckets[n]->getDepth();
     s = "";
     while(n>0 && d>0)
@@ -112,16 +112,16 @@ string Directory::bucket_id(int n)
     return s;
 }
 
-void Directory::insert(int key,string value,bool reinserted)
+void Directory::insert(int key,std::string value,bool reinserted)
 {
     int bucket_no = hash(key);
     int status = buckets[bucket_no]->insert(key,value);
     if(status==1)
     {
         if(!reinserted)
-            cout<<"Inserted key "<<key<<" in bucket "<<bucket_id(bucket_no)<<endl;
+            std::cout<<"Inserted key "<<key<<" in bucket "<<bucket_id(bucket_no)<<std::endl;
         else
-            cout<<"Moved key "<<key<<" to bucket "<<bucket_id(bucket_no)<<endl;
+            std::cout<<"Moved key "<<key<<" to bucket "<<bucket_id(bucket_no)<<std::endl;
     }
     else if(status==0)
     {
@@ -130,7 +130,7 @@ void Directory::insert(int key,string value,bool reinserted)
     }
     else
     {
-        cout<<"Key "<<key<<" already exists in bucket "<<bucket_id(bucket_no)<<endl;
+        std::cout<<"Key "<<key<<" already exists in bucket "<<bucket_id(bucket_no)<<std::endl;
     }
 }
 
@@ -138,7 +138,7 @@ void Directory::remove(int key,int mode)
 {
     int bucket_no = hash(key);
     if(buckets[bucket_no]->remove(key))
-        cout<<"Deleted key "<<key<<" from bucket "<<bucket_id(bucket_no)<<endl;
+        std::cout<<"Deleted key "<<key<<" from bucket "<<bucket_id(bucket_no)<<std::endl;
     if(mode>0)
     {
         if(buckets[bucket_no]->isEmpty() && buckets[bucket_no]->getDepth()>1)
@@ -150,7 +150,7 @@ void Directory::remove(int key,int mode)
     }
 }
 
-void Directory::update(int key, string value)
+void Directory::update(int key, std::string value)
 {
     int bucket_no = hash(key);
     buckets[bucket_no]->update(key,value);
@@ -159,16 +159,16 @@ void Directory::update(int key, string value)
 void Directory::search(int key)
 {
     int bucket_no = hash(key);
-    cout<<"Searching key "<<key<<" in bucket "<<bucket_id(bucket_no)<<endl;
+    std::cout<<"Searching key "<<key<<" in bucket "<<bucket_id(bucket_no)<<std::endl;
     buckets[bucket_no]->search(key);
 }
 
 void Directory::display(bool duplicates)
 {
     int i,j,d;
-    string s;
-    std::set<string> shown;
-    cout<<"Global depth : "<<global_depth<<endl;
+    std::string s;
+    std::set<std::string> shown;
+    std::cout<<"Global depth : "<<global_depth<<std::endl;
     for(i=0;i<buckets.size();i++)
     {
         d = buckets[i]->getDepth();
@@ -177,8 +177,8 @@ void Directory::display(bool duplicates)
         {
             shown.insert(s);
             for(j=d;j<=global_depth;j++)
-                cout<<" ";
-            cout<<s<<" => ";
+                std::cout<<" ";
+            std::cout<<s<<" => ";
             buckets[i]->display();
         }
     }
