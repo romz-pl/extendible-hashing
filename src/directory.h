@@ -15,7 +15,7 @@ public:
     void display( bool duplicates ) const;
 
 private:
-    static int pairIndex( uint32_t bucket_no, uint32_t depth );
+    static uint32_t pairIndex( uint32_t bucket_no, uint32_t depth );
 
     uint32_t hash( uint32_t n ) const;
     void grow();
