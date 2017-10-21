@@ -175,13 +175,17 @@ void Directory::update( uint32_t key, std::string value )
 {
     const uint32_t bucket_no = hash( key );
     m_buckets[ bucket_no ]->update( key, value );
+    std::cout << "Value updated" << std::endl;
 }
 
 std::string Directory::search( uint32_t key ) const
 {
     const uint32_t bucket_no = hash( key );
     std::cout << "Searching key " << key << " in bucket " << bucket_id( bucket_no ) << std::endl;
-    return m_buckets[ bucket_no ]->search( key );
+
+    const std::string value = m_buckets[ bucket_no ]->search( key );
+    std::cout << "Value = " << value << std::endl;
+    return value;
 }
 
 void Directory::display( bool duplicates ) const
