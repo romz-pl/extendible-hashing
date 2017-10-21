@@ -11,7 +11,7 @@ public:
     void insert( int key, std::string value, bool reinserted );
     void remove( int key, int mode );
     void update( int key, std::string value );
-    void search( int key );
+    std::string search( int key );
     void display( bool duplicates );
 
 private:

@@ -152,11 +152,11 @@ void Directory::update( int key, std::string value )
     buckets[bucket_no]->update(key,value);
 }
 
-void Directory::search( int key )
+std::string Directory::search( int key )
 {
     int bucket_no = hash(key);
     std::cout<<"Searching key "<<key<<" in bucket "<<bucket_id(bucket_no)<<std::endl;
-    buckets[bucket_no]->search(key);
+    return buckets[bucket_no]->search(key);
 }
 
 void Directory::display( bool duplicates )

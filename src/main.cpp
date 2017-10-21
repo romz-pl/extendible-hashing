@@ -5,17 +5,14 @@
 #include <algorithm>
 #include <unordered_map>
 
-void TestGet();
-void TestPut();
-void TestPutSmall();
-Data GetRandomData();
+void Check();
+std::string GetRandomString();
 
 int main()
 {
     try
     {
-        // TestGet();
-        TestPut();
+        Check();
     }
     catch( std::exception& e )
     {
@@ -30,19 +27,53 @@ int main()
 //
 //
 //
-void TestGet()
+void Check()
 {
-    /*
-    HashEx he;
-    Key key( 1 );
-    Data data = he.Get( key );
-    */
+
+
+    const int initial_global_depth = 2;
+    const int bucket_size = 3;
+    Directory dir(initial_global_depth,bucket_size);
+    std::unordered_map< int, std::string > stlMap;
+
+    const std::size_t eltNo = 1400;
+    std::vector< int > key;
+    key.reserve( eltNo );
+    for( std::size_t i = 0; i < eltNo; i++ )
+        key.push_back( int( i ) );
+
+     std::shuffle( key.begin(), key.end(), std::mt19937{ std::random_device{}() } );
+
+     for( const int& k : key )
+     {
+         const std::string data = GetRandomString();
+
+         dir.insert( k, data, 0);
+         // dir.display( true );
+
+         stlMap.insert( std::make_pair( k, data ) );
+     }
+
+     std::shuffle( key.begin(), key.end(), std::mt19937{ std::random_device{}() } );
+
+     for( int k : key )
+     {
+         const std::string dataA = dir.search( k );
+         const std::string dataB = stlMap.at( k );
+
+         if( dataA != dataB )
+         {
+             throw std::runtime_error( "Error" );
+         }
+     }
+
 }
+
 
 //
 //
 //
-Data GetRandomData()
+std::string GetRandomString()
 {
     const std::string alphabet( "0123456789"
                                 "abcdefghijklmnopqrstuvwxyz"
@@ -61,9 +92,11 @@ Data GetRandomData()
         const char c = alphabet[ pick( g ) ];
         s += c;
     }
-    return Data( s );
+    return s;
 }
 
+
+/*
 namespace std
 {
     template<> struct hash< Key >
@@ -76,74 +109,4 @@ namespace std
         }
     };
 }
-
-//
-//
-//
-void TestPut()
-{
-    /*
-    HashEx he;
-    std::unordered_map< Key, Data > stlMap;
-
-    const std::size_t eltNo = 40;
-    std::vector< Key > key;
-    key.reserve( eltNo );
-    for( std::size_t i = 0; i < eltNo; i++ )
-        key.push_back( Key( i ) );
-
-     std::shuffle( key.begin(), key.end(), std::mt19937{ std::random_device{}() } );
-
-     int jj = 0;
-     for( const Key& k : key )
-     {
-         const Data data = GetRandomData();
-
-         std::cout << jj << ": " << k.m_value << " " << data.m_data << std::endl << std::flush;
-
-         he.Put( k, data );
-
-         // he.Print();
-
-
-
-         stlMap.insert( std::make_pair( k, data ) );
-         jj++;
-     }
-
-     std::shuffle( key.begin(), key.end(), std::mt19937{ std::random_device{}() } );
-
-     for( const Key& k : key )
-     {
-         const Data dataA = he.Get( k );
-         const Data dataB = stlMap.at( k );
-
-         if( dataA != dataB )
-         {
-             throw std::runtime_error( "Error" );
-         }
-     }
-     */
-}
-
-//
-//
-//
-void TestPutSmall()
-{
-    /*
-    HashEx he;
-    Key keyA( 1 );
-    Data dataA( "abc-1" );
-    he.Put( keyA, dataA );
-    assert( he.Get( keyA ) == dataA );
-
-    Key keyB = Key( 3 );
-    Data dataB = Data( "abc-3" );
-    he.Put( keyB, dataB );
-    assert( he.Get( keyA ) == dataA );
-    assert( he.Get( keyB ) == dataB );
-
-    // he.Put( key, data );
-    */
-}
+*/

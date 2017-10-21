@@ -11,7 +11,7 @@ public:
     int insert( int key, std::string value );
     int remove( int key );
     int update( int key, std::string value );
-    void search( int key );
+    std::string search( int key );
     int isFull();
     int isEmpty();
     int getDepth();

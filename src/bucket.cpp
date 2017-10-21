@@ -53,17 +53,18 @@ int Bucket::update( int key, std::string value )
     }
 }
 
-void Bucket::search( int key )
+std::string Bucket::search( int key )
 {
     std::map<int,std::string>::iterator it;
     it = values.find(key);
     if(it!=values.end())
     {
         std::cout<<"Value = "<<it->second<<std::endl;
+        return it->second;
     }
     else
     {
-        std::cout<<"This key does not exists"<<std::endl;
+        throw std::runtime_error( "This key does not exists" );
     }
 }
 
