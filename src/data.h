@@ -11,8 +11,9 @@ public:
     ~Data() = default;
 
     bool operator == ( const Data& v ) const;
+    bool operator != ( const Data& v ) const;
 
-private:
+//private:
     std::string m_data;
 };
 
