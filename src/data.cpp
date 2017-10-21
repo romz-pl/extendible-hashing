@@ -16,3 +16,11 @@ Data::Data( const std::string& v )
 {
 
 }
+
+//
+//
+//
+bool Data::operator == ( const Data& v ) const
+{
+    return m_data == v.m_data;
+}
