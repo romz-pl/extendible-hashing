@@ -32,3 +32,11 @@ void HashEx::Delete( const Key& /*key*/ )
 {
     assert( 0 );
 }
+
+//
+//
+//
+void HashEx::Print() const
+{
+    m_dir.Print();
+}

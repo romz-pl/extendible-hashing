@@ -6,6 +6,7 @@
 class Key
 {
 public:
+    Key();
     Key( std::uint32_t value );
     ~Key() = default;
 
@@ -17,6 +18,10 @@ public:
     // bool operator< (const Key& key ) const;
 
 private:
+    static std::uint64_t Hash64( std::uint64_t x );
+
+public:
+//private:
     std::uint32_t m_value;
 };
 

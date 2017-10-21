@@ -6,10 +6,14 @@
 class Data
 {
 public:
+    Data();
     Data( const std::string& v );
     ~Data() = default;
 
-private:
+    bool operator == ( const Data& v ) const;
+    bool operator != ( const Data& v ) const;
+
+//private:
     std::string m_data;
 };
 

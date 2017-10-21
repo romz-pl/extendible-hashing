@@ -1,6 +1,7 @@
 #include "directory.h"
 #include <cassert>
 #include <stdexcept>
+#include <iostream>
 
 //
 //
@@ -10,6 +11,10 @@ Directory::Directory()
 {
     const std::size_t size = ( 1 << m_globalDepth );
     m_dir.resize( size, nullptr );
+
+    for( Bucket*&b : m_dir )
+        b = NewBucket( m_globalDepth );
+
 }
 
 //
@@ -17,7 +22,7 @@ Directory::Directory()
 //
 Directory::~Directory()
 {
-    for( auto b : m_dir )
+    for( auto b : m_pool )
         delete b;
 }
 
@@ -26,17 +31,11 @@ Directory::~Directory()
 //
 Data Directory::Get( const Key& key ) const
 {
-    if( m_dir.size() == 0 )
-    {
-        throw std::runtime_error( "The Key not found. The directory is empty." );
-    }
+    assert( m_dir.size() != 0 );
 
     const std::size_t id = GetEntryId( key );
     const Bucket* b = m_dir[ id ];
-    if( !b )
-    {
-        throw std::runtime_error( "The Key not found. Empty bucket." );
-    }
+    assert( b );
     return b->Get( key );
 }
 
@@ -61,10 +60,11 @@ std::size_t Directory::GetEntryId( const Key& key ) const
 //
 void Directory::Put( const Key& key, const Data& data )
 {
-    std::size_t id = GetEntryId( key );
-    if( !m_dir[ id ] )
+    const std::size_t id = GetEntryId( key );
+
+    if( !m_dir[ id ]->IsFull() )
     {
-        m_dir[ id ] = new Bucket( key, data );
+        m_dir[ id ]->Put( key, data );
         return;
     }
 
@@ -73,17 +73,75 @@ void Directory::Put( const Key& key, const Data& data )
         throw std::runtime_error( "Key already inserted" );
     }
 
-    Bucket* p = m_dir[ id ];
-    m_dir[ id ] = nullptr;
-
-    m_globalDepth++;
-    const std::vector< Bucket* > tmp = m_dir;
-    m_dir.insert( m_dir.end(), tmp.begin(), tmp.end() );
-    id = GetEntryId( p->GetKey() );
-    m_dir[ id ] = p;
-
-    Put( key, data );
 
 
+    bool force = false;
+    std::size_t idA = 0, idB = 0;
+    do
+    {
+        // Double the directory
+        if( force || m_globalDepth == m_dir[ id ]->GetLocalDepth() )
+        {
+            m_globalDepth++;
+            std::cout << "Global-Depth=" << m_globalDepth << std::endl;
+            const std::vector< Bucket* > tmp = m_dir;
+            m_dir.insert( m_dir.end(), tmp.begin(), tmp.end() );
+        }
 
+        // Split the Bucket
+
+        idA = GetEntryId( m_dir[ id ]->GetKey() );
+
+        idB = GetEntryId( key );
+
+        if( idA == idB )
+        {
+            force = true;
+        }
+
+    } while( idA == idB );
+
+
+    const std::size_t v = m_dir[ id ]->GetLocalDepth();
+
+    const Key oldKey = m_dir[ id ]->GetKey();
+    const Data oldData = m_dir[ id ]->GetData();
+    *(m_dir[ idA ]) = Bucket( oldKey, oldData, v + 1 );
+
+    m_dir[ idB ] = NewBucket( key, data, v + 1 );
+
+
+
+
+}
+
+//
+//
+//
+Bucket* Directory::NewBucket( std::uint32_t depth )
+{
+    Bucket* b = new Bucket( depth );
+    m_pool.push_back( b );
+    return b;
+}
+
+//
+//
+//
+Bucket* Directory::NewBucket( const Key& key, const Data& data, std::uint32_t depth )
+{
+    Bucket* b = new Bucket( key, data, depth );
+    m_pool.push_back( b );
+    return b;
+}
+
+//
+//
+//
+void Directory::Print() const
+{
+    std::cout << "Global Depth: " << m_globalDepth << std::endl;
+
+    for( auto b : m_dir )
+        b->Print();
 }
