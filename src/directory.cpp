@@ -60,16 +60,20 @@ std::size_t Directory::GetEntryId( const Key& key ) const
 void Directory::Put( const Key& key, const Data& data )
 {
     std::size_t id = GetEntryId( key );
-    if( !m_dir[ id ] )
-    {
-        m_dir[ id ] = new Bucket( key, data );
-        return;
-    }
 
     if( m_dir[ id ]->GetKey() == key )
     {
         throw std::runtime_error( "Key already inserted" );
     }
+
+    if( !m_dir[ id ]->IsFull() )
+    {
+        m_dir[ id ]->Put( key, data );
+        return;
+
+    }
+
+    // Split the Bucket or double the directory
 
     Bucket* p = m_dir[ id ];
     m_dir[ id ] = nullptr;
