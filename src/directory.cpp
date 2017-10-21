@@ -83,6 +83,7 @@ void Directory::Put( const Key& key, const Data& data )
         if( force || m_globalDepth == m_dir[ id ]->GetLocalDepth() )
         {
             m_globalDepth++;
+            std::cout << "Global-Depth=" << m_globalDepth << std::endl;
             const std::vector< Bucket* > tmp = m_dir;
             m_dir.insert( m_dir.end(), tmp.begin(), tmp.end() );
         }
@@ -100,18 +101,15 @@ void Directory::Put( const Key& key, const Data& data )
 
     } while( idA == idB );
 
-    // if( idA != idB )
-    //{
-        Bucket* w = m_dir[ id ];
-        w->IncLocalDepth();
 
-        m_dir[ idA ] = w;
+    const std::size_t v = m_dir[ id ]->GetLocalDepth();
 
-        m_dir[ idB ] = NewBucket( key, data, w->GetLocalDepth() );
-        return;
-    //}
+    const Key oldKey = m_dir[ id ]->GetKey();
+    const Data oldData = m_dir[ id ]->GetData();
+    *(m_dir[ idA ]) = Bucket( oldKey, oldData, v + 1 );
 
-    // Put( key, data );
+    m_dir[ idB ] = NewBucket( key, data, v + 1 );
+
 
 
 

@@ -83,7 +83,7 @@ void TestPut()
     HashEx he;
     std::unordered_map< Key, Data > stlMap;
 
-    const std::size_t eltNo = 100;
+    const std::size_t eltNo = 40;
     std::vector< Key > key;
     key.reserve( eltNo );
     for( std::size_t i = 0; i < eltNo; i++ )
@@ -100,7 +100,7 @@ void TestPut()
 
          he.Put( k, data );
 
-         he.Print();
+         // he.Print();
 
 
 

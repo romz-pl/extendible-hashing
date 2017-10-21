@@ -54,6 +54,15 @@ Key Bucket::GetKey( ) const
 //
 //
 //
+Data Bucket::GetData( ) const
+{
+    assert( !m_empty );
+    return m_data;
+}
+
+//
+//
+//
 bool Bucket::IsFull() const
 {
     return !m_empty;
@@ -82,9 +91,9 @@ std::uint32_t Bucket::GetLocalDepth() const
 //
 //
 //
-void Bucket::IncLocalDepth()
+void Bucket::SetLocalDepth( std::uint32_t depth )
 {
-    m_localDepth++;
+    m_localDepth = depth;
 }
 
 //

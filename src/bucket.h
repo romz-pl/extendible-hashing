@@ -15,11 +15,12 @@ public:
     void Put( const Key& key, const Data& data );
 
     Key GetKey( ) const;
+    Data GetData( ) const;
 
     bool IsFull() const;
 
     std::uint32_t GetLocalDepth() const;
-    void IncLocalDepth();
+    void SetLocalDepth( std::uint32_t depth );
 
     void SetEmpty();
 
