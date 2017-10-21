@@ -1,6 +1,7 @@
 #include "bucket.h"
 #include <stdexcept>
 #include <cassert>
+#include <iostream>
 
 //
 //
@@ -92,4 +93,15 @@ void Bucket::IncLocalDepth()
 void Bucket::SetEmpty()
 {
     m_empty = true;
+}
+
+//
+//
+//
+void Bucket::Print() const
+{
+    std::cout << std::boolalpha << m_empty << "; ";
+    std::cout << "Local-Depth=" << m_localDepth << "; ";
+    std::cout << "Key=" << m_key.m_value << "; ";
+    std::cout << std::flush << std::endl;
 }

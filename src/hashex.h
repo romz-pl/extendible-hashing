@@ -68,6 +68,8 @@ public:
     void Put( const Key& key, const Data& data );
     void Delete( const Key& key );
 
+    void Print() const;
+
 private:
     Directory m_dir;
 

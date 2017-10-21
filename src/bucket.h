@@ -23,6 +23,8 @@ public:
 
     void SetEmpty();
 
+    void Print() const;
+
 private:
     bool m_empty;
 
