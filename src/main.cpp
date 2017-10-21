@@ -32,9 +32,11 @@ int main()
 //
 void TestGet()
 {
+    /*
     HashEx he;
     Key key( 1 );
     Data data = he.Get( key );
+    */
 }
 
 //
@@ -80,6 +82,7 @@ namespace std
 //
 void TestPut()
 {
+    /*
     HashEx he;
     std::unordered_map< Key, Data > stlMap;
 
@@ -120,6 +123,7 @@ void TestPut()
              throw std::runtime_error( "Error" );
          }
      }
+     */
 }
 
 //
@@ -127,6 +131,7 @@ void TestPut()
 //
 void TestPutSmall()
 {
+    /*
     HashEx he;
     Key keyA( 1 );
     Data dataA( "abc-1" );
@@ -140,4 +145,5 @@ void TestPutSmall()
     assert( he.Get( keyB ) == dataB );
 
     // he.Put( key, data );
+    */
 }
