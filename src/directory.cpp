@@ -30,17 +30,11 @@ Directory::~Directory()
 //
 Data Directory::Get( const Key& key ) const
 {
-    if( m_dir.size() == 0 )
-    {
-        throw std::runtime_error( "The Key not found. The directory is empty." );
-    }
+    assert( m_dir.size() != 0 );
 
     const std::size_t id = GetEntryId( key );
     const Bucket* b = m_dir[ id ];
-    if( !b )
-    {
-        throw std::runtime_error( "The Key not found. Empty bucket." );
-    }
+    assert( b );
     return b->Get( key );
 }
 
