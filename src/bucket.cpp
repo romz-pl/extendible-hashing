@@ -2,13 +2,13 @@
 #include <iostream>
 
 
-Bucket::Bucket(int depth, int size)
+Bucket::Bucket( int depth, int size )
 {
     this->depth = depth;
     this->size = size;
 }
 
-int Bucket::insert(int key, std::string value)
+int Bucket::insert( int key, std::string value )
 {
     std::map<int,std::string>::iterator it;
     it = values.find(key);
@@ -20,7 +20,7 @@ int Bucket::insert(int key, std::string value)
     return 1;
 }
 
-int Bucket::remove(int key)
+int Bucket::remove( int key )
 {
     std::map<int,std::string>::iterator it;
     it = values.find(key);
@@ -36,7 +36,7 @@ int Bucket::remove(int key)
     }
 }
 
-int Bucket::update(int key, std::string value)
+int Bucket::update( int key, std::string value )
 {
     std::map<int,std::string>::iterator it;
     it = values.find(key);
@@ -53,7 +53,7 @@ int Bucket::update(int key, std::string value)
     }
 }
 
-void Bucket::search(int key)
+void Bucket::search( int key )
 {
     std::map<int,std::string>::iterator it;
     it = values.find(key);
@@ -67,7 +67,7 @@ void Bucket::search(int key)
     }
 }
 
-int Bucket::isFull(void)
+int Bucket::isFull()
 {
     if(values.size()==size)
         return 1;
@@ -75,7 +75,7 @@ int Bucket::isFull(void)
         return 0;
 }
 
-int Bucket::isEmpty(void)
+int Bucket::isEmpty()
 {
     if(values.size()==0)
         return 1;
@@ -83,30 +83,30 @@ int Bucket::isEmpty(void)
         return 0;
 }
 
-int Bucket::getDepth(void)
+int Bucket::getDepth()
 {
     return depth;
 }
 
-int Bucket::increaseDepth(void)
+int Bucket::increaseDepth()
 {
     depth++;
     return depth;
 }
 
-int Bucket::decreaseDepth(void)
+int Bucket::decreaseDepth()
 {
     depth--;
     return depth;
 }
 
-std::map<int, std::string> Bucket::copy(void)
+std::map< int, std::string > Bucket::copy()
 {
     std::map<int, std::string> temp(values.begin(),values.end());
     return temp;
 }
 
-void Bucket::clear(void)
+void Bucket::clear()
 {
     values.clear();
 }

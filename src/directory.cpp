@@ -3,7 +3,7 @@
 #include <set>
 
 
-Directory::Directory(int depth, int bucket_size)
+Directory::Directory( int depth, int bucket_size )
 {
     this->global_depth = depth;
     this->bucket_size = bucket_size;
@@ -13,24 +13,24 @@ Directory::Directory(int depth, int bucket_size)
     }
 }
 
-int Directory::hash(int n)
+int Directory::hash( int n )
 {
     return n&((1<<global_depth)-1);
 }
 
-int Directory::pairIndex(int bucket_no, int depth)
+int Directory::pairIndex( int bucket_no, int depth )
 {
     return bucket_no^(1<<(depth-1));
 }
 
-void Directory::grow(void)
+void Directory::grow()
 {
     for(int i = 0 ; i < 1<<global_depth ; i++ )
         buckets.push_back(buckets[i]);
     global_depth++;
 }
 
-void Directory::shrink(void)
+void Directory::shrink()
 {
     int i,flag=1;
     for( i=0 ; i<buckets.size() ; i++ )
@@ -46,7 +46,7 @@ void Directory::shrink(void)
         buckets.pop_back();
 }
 
-void Directory::split(int bucket_no)
+void Directory::split( int bucket_no )
 {
     int local_depth,pair_index,index_diff,dir_size,i;
     std::map<int, std::string> temp;
@@ -69,7 +69,7 @@ void Directory::split(int bucket_no)
         insert((*it).first,(*it).second,1);
 }
 
-void Directory::merge(int bucket_no)
+void Directory::merge( int bucket_no )
 {
     int local_depth,pair_index,index_diff,dir_size,i;
 
@@ -90,7 +90,7 @@ void Directory::merge(int bucket_no)
     }
 }
 
-std::string Directory::bucket_id(int n)
+std::string Directory::bucket_id( int n )
 {
     int d;
     std::string s;
@@ -110,7 +110,7 @@ std::string Directory::bucket_id(int n)
     return s;
 }
 
-void Directory::insert(int key,std::string value,bool reinserted)
+void Directory::insert( int key, std::string value, bool reinserted )
 {
     int bucket_no = hash(key);
     int status = buckets[bucket_no]->insert(key,value);
@@ -132,7 +132,7 @@ void Directory::insert(int key,std::string value,bool reinserted)
     }
 }
 
-void Directory::remove(int key,int mode)
+void Directory::remove( int key,int mode )
 {
     int bucket_no = hash(key);
     if(buckets[bucket_no]->remove(key))
@@ -148,20 +148,20 @@ void Directory::remove(int key,int mode)
     }
 }
 
-void Directory::update(int key, std::string value)
+void Directory::update( int key, std::string value )
 {
     int bucket_no = hash(key);
     buckets[bucket_no]->update(key,value);
 }
 
-void Directory::search(int key)
+void Directory::search( int key )
 {
     int bucket_no = hash(key);
     std::cout<<"Searching key "<<key<<" in bucket "<<bucket_id(bucket_no)<<std::endl;
     buckets[bucket_no]->search(key);
 }
 
-void Directory::display(bool duplicates)
+void Directory::display( bool duplicates )
 {
     int i,j,d;
     std::string s;
