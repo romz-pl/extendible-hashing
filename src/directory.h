@@ -27,7 +27,7 @@ private:
 
 private:
     uint32_t m_global_depth;
-    uint32_t m_bucket_size;
+    const uint32_t m_bucket_size;
     std::vector< Bucket* > m_buckets;
 
 

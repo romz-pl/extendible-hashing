@@ -1,15 +1,19 @@
 #include "directory.h"
 #include <iostream>
 #include <set>
+#include <cassert>
+#include <sstream>
 
 
 Directory::Directory( uint32_t depth, uint32_t bucket_size )
     : m_global_depth( depth)
     , m_bucket_size( bucket_size )
 {
-    for(int i = 0 ; i < 1<<depth ; i++ )
+    const uint32_t ss = ( 1U << m_global_depth );
+    m_buckets.reserve( ss );
+    for( size_t i = 0 ; i < ss ; i++ )
     {
-        m_buckets.push_back(new Bucket(depth,bucket_size));
+        m_buckets.push_back( new Bucket( depth, bucket_size ) );
     }
 }
 
@@ -25,14 +29,19 @@ int Directory::pairIndex( uint32_t bucket_no, uint32_t depth )
 
 void Directory::grow()
 {
-    for(int i = 0 ; i < 1 << m_global_depth ; i++ )
+    const size_t ss = m_buckets.size();
+    assert( ss == ( 1U << m_global_depth ) );
+
+    m_buckets.reserve( 2 * ss );
+    for( size_t i = 0 ; i < ss ; i++ )
         m_buckets.push_back( m_buckets[ i ] );
+
     m_global_depth++;
 }
 
 void Directory::shrink()
 {
-    for( std::size_t i=0 ; i < m_buckets.size() ; i++ )
+    for( size_t i = 0 ; i < m_buckets.size() ; i++ )
     {
         if( m_buckets[ i ]->getDepth() == m_global_depth )
         {
@@ -116,31 +125,33 @@ std::string Directory::bucket_id( uint32_t n ) const
 
 void Directory::insert( uint32_t key, std::string value, bool reinserted )
 {
-    uint32_t bucket_no = hash( key );
-    int status = m_buckets[ bucket_no ]->insert( key, value );
-    if(status == 1)
+    const uint32_t bucket_no = hash( key );
+    const int status = m_buckets[ bucket_no ]->insert( key, value );
+    if( status == 1 )
     {
         if( !reinserted )
-            std::cout<<"Inserted key "<<key<<" in bucket "<<bucket_id(bucket_no)<<std::endl;
+            std::cout << "Inserted key " << key << " in bucket " << bucket_id( bucket_no ) << std::endl;
         else
-            std::cout<<"Moved key "<<key<<" to bucket "<<bucket_id(bucket_no)<<std::endl;
+            std::cout << "Moved key " << key << " to bucket " << bucket_id( bucket_no ) << std::endl;
     }
-    else if( status==0 )
+    else if( status == 0 )
     {
         split( bucket_no );
         insert( key, value, reinserted );
     }
     else
     {
-        std::cout<<"Key "<<key<<" already exists in bucket "<<bucket_id(bucket_no)<<std::endl;
+        std::stringstream buffer;
+        buffer << "Key " << key << " already exists in bucket " << bucket_id( bucket_no );
+        throw std::runtime_error( buffer.str() );
     }
 }
 
 void Directory::remove( uint32_t key, int mode )
 {
     const uint32_t bucket_no = hash( key );
-    if( m_buckets[ bucket_no ]->remove( key ))
-        std::cout<<"Deleted key "<<key<<" from bucket "<<bucket_id(bucket_no)<<std::endl;
+    m_buckets[ bucket_no ]->remove( key );
+    std::cout << "Deleted key " << key << " from bucket " << bucket_id( bucket_no ) << std::endl;
 
     if( mode > 0 )
     {

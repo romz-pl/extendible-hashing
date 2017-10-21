@@ -1,5 +1,6 @@
 #include "bucket.h"
 #include <iostream>
+#include <sstream>
 
 
 Bucket::Bucket( uint32_t depth, uint32_t size )
@@ -21,18 +22,18 @@ int Bucket::insert( uint32_t key, std::string value )
     return 1;
 }
 
-int Bucket::remove( uint32_t key )
+void Bucket::remove( uint32_t key )
 {
     const auto it = m_values.find( key );
     if( it != m_values.end() )
     {
         m_values.erase( it );
-        return 1;
     }
     else
     {
-        std::cout<<"Cannot remove : This key does not exists"<<std::endl;
-        return 0;
+        std::stringstream buffer;
+        buffer << "Cannot remove. Key '" << key << "' does not exists.";
+        throw std::runtime_error( buffer.str() );
     }
 }
 

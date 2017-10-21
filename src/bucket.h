@@ -10,7 +10,7 @@ class Bucket
 public:
     Bucket( uint32_t depth, uint32_t size );
     int insert( uint32_t key, std::string value );
-    int remove( uint32_t key );
+    void remove( uint32_t key );
     int update( uint32_t key, std::string value );
     std::string search( uint32_t key ) const;
     bool isFull() const;
