@@ -6,7 +6,8 @@
 //
 //
 Bucket::Bucket()
-    : m_localDepth( 0 )
+    : m_empty( true )
+    , m_localDepth( 0 )
 {
 
 }
@@ -14,11 +15,12 @@ Bucket::Bucket()
 //
 //
 //
-Bucket::Bucket( const Key& key, const Data& data )
-    : m_localDepth( 0 )
+Bucket::Bucket( const Key& key, const Data& data, uint32_t localDepth )
+    : m_empty( false )
+    , m_localDepth( localDepth )
     , m_key( key )
 {
-    m_data.push_front( data );
+    m_data = data;
 }
 
 
@@ -27,7 +29,7 @@ Bucket::Bucket( const Key& key, const Data& data )
 //
 Data Bucket::Get( const Key& key ) const
 {
-    if( m_data.empty() )
+    if( m_empty )
     {
         throw std::runtime_error( "Bucket::Get: Empty bucket." );
     }
@@ -36,7 +38,7 @@ Data Bucket::Get( const Key& key ) const
     {
         throw std::runtime_error( "Bucket::Get: Key not found." );
     }
-    return m_data.front();
+    return m_data;
 }
 
 //
@@ -44,6 +46,7 @@ Data Bucket::Get( const Key& key ) const
 //
 Key Bucket::GetKey( ) const
 {
+    assert( !m_empty );
     return m_key;
 }
 
@@ -52,7 +55,7 @@ Key Bucket::GetKey( ) const
 //
 bool Bucket::IsFull() const
 {
-    return !m_data.empty();
+    return !m_empty;
 }
 
 //
@@ -60,7 +63,25 @@ bool Bucket::IsFull() const
 //
 void Bucket::Put( const Key& key, const Data& data )
 {
+    assert( m_empty );
+
     m_key = key;
-    assert( m_data.empty() );
-    m_data.push_front( data );
+    m_data = data;
+    m_empty = false;
+}
+
+//
+//
+//
+std::uint32_t Bucket::GetLocalDepth() const
+{
+    return m_localDepth;
+}
+
+//
+//
+//
+void Bucket::IncLocalDepth()
+{
+    m_localDepth++;
 }

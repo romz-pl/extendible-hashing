@@ -3,13 +3,12 @@
 
 #include "data.h"
 #include "key.h"
-#include <forward_list>
 
 class Bucket
 {
 public:
     Bucket();
-    Bucket( const Key& key, const Data& data );
+    Bucket( const Key& key, const Data& data, std::uint32_t localDepth );
     ~Bucket() = default;
 
     Data Get( const Key &key ) const;
@@ -19,14 +18,17 @@ public:
 
     bool IsFull() const;
 
+    std::uint32_t GetLocalDepth() const;
+    void IncLocalDepth();
+
 private:
+    bool m_empty;
+
     std::uint32_t m_localDepth;
 
     Key m_key;
 
-    // Here should be:
-    // std::optional< Data > m_data;
-    std::forward_list< Data > m_data;
+    Data m_data;
 };
 
 #endif
