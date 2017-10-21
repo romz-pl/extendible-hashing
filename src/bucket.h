@@ -13,8 +13,8 @@ public:
     int remove( uint32_t key );
     int update( uint32_t key, std::string value );
     std::string search( uint32_t key );
-    int isFull();
-    int isEmpty();
+    bool isFull() const;
+    bool isEmpty() const;
     uint32_t getDepth();
     uint32_t increaseDepth();
     uint32_t decreaseDepth();

@@ -68,20 +68,14 @@ std::string Bucket::search( uint32_t key )
     }
 }
 
-int Bucket::isFull()
+bool Bucket::isFull() const
 {
-    if(values.size() == static_cast< std::size_t >( size ) )
-        return 1;
-    else
-        return 0;
+    return ( values.size() == size );
 }
 
-int Bucket::isEmpty()
+bool Bucket::isEmpty() const
 {
-    if(values.size()==0)
-        return 1;
-    else
-        return 0;
+    return ( values.size() == 0 );
 }
 
 uint32_t Bucket::getDepth()
