@@ -22,7 +22,7 @@ uint32_t Directory::hash( uint32_t n ) const
     return n & ( ( 1 << m_global_depth ) - 1 );
 }
 
-int Directory::pairIndex( uint32_t bucket_no, uint32_t depth )
+uint32_t Directory::pairIndex( uint32_t bucket_no, uint32_t depth )
 {
     return bucket_no ^ ( 1 << ( depth - 1 ) );
 }
@@ -55,39 +55,34 @@ void Directory::shrink()
 
 void Directory::split( uint32_t bucket_no )
 {
-    int pair_index,index_diff,dir_size,i;
-    std::map< uint32_t, std::string > temp;
-    std::map< uint32_t, std::string >::iterator it;
-
     const uint32_t local_depth = m_buckets[ bucket_no ]->increaseDepth();
     if( local_depth > m_global_depth )
         grow();
 
-    pair_index = pairIndex( bucket_no, local_depth );
+    const int32_t pair_index = pairIndex( bucket_no, local_depth );
     m_buckets[ pair_index ] = new Bucket( local_depth, m_bucket_size );
-    temp = m_buckets[ bucket_no ]->copy();
-    m_buckets[ bucket_no ]->clear();
-    index_diff = 1<<local_depth;
-    dir_size = 1<<m_global_depth;
 
-    for( i = pair_index - index_diff ; i >= 0 ; i -= index_diff )
+    const std::map< uint32_t, std::string > temp = m_buckets[ bucket_no ]->copy();
+    m_buckets[ bucket_no ]->clear();
+    const int32_t index_diff = 1<<local_depth;
+    const int32_t dir_size = 1<<m_global_depth;
+
+    for( int32_t i = pair_index - index_diff ; i >= 0 ; i -= index_diff )
         m_buckets[ i ] = m_buckets[pair_index];
 
-    for( i=pair_index + index_diff ; i < dir_size ; i += index_diff )
+    for( int32_t i = pair_index + index_diff ; i < dir_size ; i += index_diff )
         m_buckets[ i ] = m_buckets[ pair_index ];
 
-    for( it = temp.begin(); it != temp.end(); it++ )
-        insert( (*it).first, (*it).second, 1 );
+    for( const auto v : temp )
+        insert( v.first, v.second, 1 );
 }
 
 void Directory::merge( uint32_t bucket_no )
 {
-    int pair_index,index_diff,dir_size,i;
-
     const uint32_t local_depth = m_buckets[bucket_no]->getDepth();
-    pair_index = pairIndex(bucket_no,local_depth);
-    index_diff = 1 << local_depth;
-    dir_size = 1 << m_global_depth;
+    const int32_t pair_index = pairIndex(bucket_no,local_depth);
+    const int32_t index_diff = 1 << local_depth;
+    const int32_t dir_size = 1 << m_global_depth;
 
     if( m_buckets[ pair_index ]->getDepth() == local_depth )
     {
@@ -95,10 +90,10 @@ void Directory::merge( uint32_t bucket_no )
         delete( m_buckets[ bucket_no ] );
         m_buckets[ bucket_no ] = m_buckets[ pair_index ];
 
-        for( i = bucket_no - index_diff ; i >= 0 ; i -= index_diff )
+        for( int32_t i = bucket_no - index_diff ; i >= 0 ; i -= index_diff )
             m_buckets[ i ] = m_buckets[ pair_index ];
 
-        for( i = bucket_no + index_diff ; i < dir_size ; i += index_diff )
+        for( int32_t i = bucket_no + index_diff ; i < dir_size ; i += index_diff )
             m_buckets[ i ] = m_buckets[ pair_index ];
     }
 }
@@ -175,13 +170,17 @@ void Directory::update( uint32_t key, std::string value )
 {
     const uint32_t bucket_no = hash( key );
     m_buckets[ bucket_no ]->update( key, value );
+    std::cout << "Value updated" << std::endl;
 }
 
 std::string Directory::search( uint32_t key ) const
 {
     const uint32_t bucket_no = hash( key );
     std::cout << "Searching key " << key << " in bucket " << bucket_id( bucket_no ) << std::endl;
-    return m_buckets[ bucket_no ]->search( key );
+
+    const std::string value = m_buckets[ bucket_no ]->search( key );
+    std::cout << "Value = " << value << std::endl;
+    return value;
 }
 
 void Directory::display( bool duplicates ) const

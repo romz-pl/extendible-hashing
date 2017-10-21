@@ -6,9 +6,12 @@
 
 Bucket::Bucket( uint32_t depth, uint32_t size )
     : m_depth( depth )
-    , m_size( size )
+    , m_maxAllowedSize( size )
 {
-
+    if( size < 1 )
+    {
+        throw std::runtime_error( "The maximum allowed size of bucket must be at least one." );
+    }
 }
 
 void Bucket::insert( uint32_t key, std::string value )
@@ -22,51 +25,45 @@ void Bucket::insert( uint32_t key, std::string value )
 void Bucket::remove( uint32_t key )
 {
     const auto it = m_values.find( key );
-    if( it != m_values.end() )
-    {
-        m_values.erase( it );
-    }
-    else
+    if( it == m_values.end() )
     {
         std::stringstream buffer;
         buffer << "Cannot remove. Key '" << key << "' does not exists.";
         throw std::runtime_error( buffer.str() );
     }
+
+    m_values.erase( it );
 }
 
-int Bucket::update( uint32_t key, std::string value )
+void Bucket::update( uint32_t key, std::string value )
 {
     const auto it = m_values.find( key );
-    if( it != m_values.end() )
+    if( it == m_values.end() )
     {
-        m_values[ key ] = value;
-        std::cout << "Value updated" << std::endl;
-        return 1;
+        std::stringstream buffer;
+        buffer << "Cannot update. Key '" << key << "' does not exists.";
+        throw std::runtime_error( buffer.str() );
     }
-    else
-    {
-        std::cout << "Cannot update : This key does not exists" << std::endl;
-        return 0;
-    }
+
+    m_values[ key ] = value;
 }
 
 std::string Bucket::search( uint32_t key ) const
 {
     const auto it = m_values.find( key );
-    if( it != m_values.end() )
+    if( it == m_values.end() )
     {
-        std::cout << "Value = " << it->second << std::endl;
-        return it->second;
+        std::stringstream buffer;
+        buffer << "Not found. Key '" << key << "' does not exists.";
+        throw std::runtime_error( buffer.str() );
     }
-    else
-    {
-        throw std::runtime_error( "This key does not exists" );
-    }
+
+    return it->second;
 }
 
 bool Bucket::isFull() const
 {
-    return ( m_values.size() == m_size );
+    return ( m_values.size() == m_maxAllowedSize );
 }
 
 bool Bucket::isEmpty() const
