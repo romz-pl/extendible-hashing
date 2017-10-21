@@ -1,6 +1,7 @@
 #include "directory.h"
 #include <cassert>
 #include <stdexcept>
+#include <iostream>
 
 //
 //
@@ -59,7 +60,7 @@ std::size_t Directory::GetEntryId( const Key& key ) const
 //
 void Directory::Put( const Key& key, const Data& data )
 {
-    std::size_t id = GetEntryId( key );
+    const std::size_t id = GetEntryId( key );
 
     if( !m_dir[ id ]->IsFull() )
     {
@@ -74,28 +75,43 @@ void Directory::Put( const Key& key, const Data& data )
 
 
 
-    // Double the directory
-    if( m_globalDepth == m_dir[ id ]->GetLocalDepth() )
+    bool force = false;
+    std::size_t idA = 0, idB = 0;
+    do
     {
-        m_globalDepth++;
-        const std::vector< Bucket* > tmp = m_dir;
-        m_dir.insert( m_dir.end(), tmp.begin(), tmp.end() );
-    }
+        // Double the directory
+        if( force || m_globalDepth == m_dir[ id ]->GetLocalDepth() )
+        {
+            m_globalDepth++;
+            const std::vector< Bucket* > tmp = m_dir;
+            m_dir.insert( m_dir.end(), tmp.begin(), tmp.end() );
+        }
 
-    // Split the Bucket
-    Bucket* w = m_dir[ id ];
-    w->IncLocalDepth();
-    id = GetEntryId( m_dir[ id ]->GetKey() );
-    m_dir[ id ] = w;
+        // Split the Bucket
 
-    const std::size_t idNew = GetEntryId( key );
-    if( id != idNew )
-    {
-        m_dir[ idNew ] = NewBucket( key, data, w->GetLocalDepth() );
+        idA = GetEntryId( m_dir[ id ]->GetKey() );
+
+        idB = GetEntryId( key );
+
+        if( idA == idB )
+        {
+            force = true;
+        }
+
+    } while( idA == idB );
+
+    // if( idA != idB )
+    //{
+        Bucket* w = m_dir[ id ];
+        w->IncLocalDepth();
+
+        m_dir[ idA ] = w;
+
+        m_dir[ idB ] = NewBucket( key, data, w->GetLocalDepth() );
         return;
-    }
+    //}
 
-    Put( key, data );
+    // Put( key, data );
 
 
 
@@ -119,4 +135,15 @@ Bucket* Directory::NewBucket( const Key& key, const Data& data, std::uint32_t de
     Bucket* b = new Bucket( key, data, depth );
     m_pool.push_back( b );
     return b;
+}
+
+//
+//
+//
+void Directory::Print() const
+{
+    std::cout << "Global Depth: " << m_globalDepth << std::endl;
+
+    for( auto b : m_dir )
+        b->Print();
 }
