@@ -1,121 +1,115 @@
 #include "bucket.h"
 #include <iostream>
+#include <sstream>
+#include <cassert>
 
-/* Bucket class functions */
 
-Bucket::Bucket(int depth, int size)
+Bucket::Bucket( uint32_t depth, uint32_t size )
+    : m_depth( depth )
+    , m_size( size )
 {
-    this->depth = depth;
-    this->size = size;
+
 }
 
-int Bucket::insert(int key, string value)
+void Bucket::insert( uint32_t key, std::string value )
 {
-    std::map<int,string>::iterator it;
-    it = values.find(key);
-    if(it!=values.end())
-        return -1;
-    if(isFull())
-        return 0;
-    values[key] = value;
-    return 1;
+    assert( m_values.find( key ) == m_values.end() );
+    assert( !isFull() );
+
+    m_values[ key ] = value;
 }
 
-int Bucket::remove(int key)
+void Bucket::remove( uint32_t key )
 {
-    std::map<int,string>::iterator it;
-    it = values.find(key);
-    if(it!=values.end())
+    const auto it = m_values.find( key );
+    if( it != m_values.end() )
     {
-        values.erase(it);
+        m_values.erase( it );
+    }
+    else
+    {
+        std::stringstream buffer;
+        buffer << "Cannot remove. Key '" << key << "' does not exists.";
+        throw std::runtime_error( buffer.str() );
+    }
+}
+
+int Bucket::update( uint32_t key, std::string value )
+{
+    const auto it = m_values.find( key );
+    if( it != m_values.end() )
+    {
+        m_values[ key ] = value;
+        std::cout << "Value updated" << std::endl;
         return 1;
     }
     else
     {
-        cout<<"Cannot remove : This key does not exists"<<endl;
+        std::cout << "Cannot update : This key does not exists" << std::endl;
         return 0;
     }
 }
 
-int Bucket::update(int key, string value)
+std::string Bucket::search( uint32_t key ) const
 {
-    std::map<int,string>::iterator it;
-    it = values.find(key);
-    if(it!=values.end())
+    const auto it = m_values.find( key );
+    if( it != m_values.end() )
     {
-        values[key] = value;
-        cout<<"Value updated"<<endl;
-        return 1;
+        std::cout << "Value = " << it->second << std::endl;
+        return it->second;
     }
     else
     {
-        cout<<"Cannot update : This key does not exists"<<endl;
-        return 0;
+        throw std::runtime_error( "This key does not exists" );
     }
 }
 
-void Bucket::search(int key)
+bool Bucket::isFull() const
 {
-    std::map<int,string>::iterator it;
-    it = values.find(key);
-    if(it!=values.end())
-    {
-        cout<<"Value = "<<it->second<<endl;
-    }
-    else
-    {
-        cout<<"This key does not exists"<<endl;
-    }
+    return ( m_values.size() == m_size );
 }
 
-int Bucket::isFull(void)
+bool Bucket::isEmpty() const
 {
-    if(values.size()==size)
-        return 1;
-    else
-        return 0;
+    return m_values.empty();
 }
 
-int Bucket::isEmpty(void)
+uint32_t Bucket::getDepth() const
 {
-    if(values.size()==0)
-        return 1;
-    else
-        return 0;
+    return m_depth;
 }
 
-int Bucket::getDepth(void)
+uint32_t Bucket::increaseDepth()
 {
-    return depth;
+    m_depth++;
+    return m_depth;
 }
 
-int Bucket::increaseDepth(void)
+uint32_t Bucket::decreaseDepth()
 {
-    depth++;
-    return depth;
+    m_depth--;
+    return m_depth;
 }
 
-int Bucket::decreaseDepth(void)
+std::map< uint32_t, std::string > Bucket::copy() const
 {
-    depth--;
-    return depth;
+    return m_values;
 }
 
-std::map<int, string> Bucket::copy(void)
+void Bucket::clear()
 {
-    std::map<int, string> temp(values.begin(),values.end());
-    return temp;
+    m_values.clear();
 }
 
-void Bucket::clear(void)
+void Bucket::display() const
 {
-    values.clear();
+    for( const auto& v : m_values )
+        std::cout << v.first << " ";
+
+    std::cout << std::endl;
 }
 
-void Bucket::display()
+bool Bucket::hasKey( uint32_t key ) const
 {
-    std::map<int,string>::iterator it;
-    for(it=values.begin();it!=values.end();it++)
-        cout<<it->first<<" ";
-    cout<<endl;
+    return ( m_values.find( key ) != m_values.end() );
 }

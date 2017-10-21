@@ -3,26 +3,31 @@
 
 #include <map>
 #include <string>
-using namespace std;
+#include <cstdint>
 
 class Bucket
 {
-        int depth,size;
-        std::map<int, string> values;
-    public:
-        Bucket(int depth, int size);
-        int insert(int key,string value);
-        int remove(int key);
-        int update(int key, string value);
-        void search(int key);
-        int isFull(void);
-        int isEmpty(void);
-        int getDepth(void);
-        int increaseDepth(void);
-        int decreaseDepth(void);
-        std::map<int, string> copy(void);
-        void clear(void);
-        void display(void);
+public:
+    Bucket( uint32_t depth, uint32_t size );
+    void insert( uint32_t key, std::string value );
+    void remove( uint32_t key );
+    int update( uint32_t key, std::string value );
+    std::string search( uint32_t key ) const;
+    bool isFull() const;
+    bool isEmpty() const;
+    uint32_t getDepth() const;
+    uint32_t increaseDepth();
+    uint32_t decreaseDepth();
+    std::map< uint32_t, std::string > copy() const;
+    void clear();
+    void display() const;
+    bool hasKey( uint32_t key ) const;
+
+private:
+    uint32_t m_depth;
+    const uint32_t m_size;
+    std::map< uint32_t, std::string > m_values;
+
 };
 
 
