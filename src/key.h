@@ -17,7 +17,7 @@ public:
 
     // bool operator< (const Key& key ) const;
 
-private:
+//private:
     std::uint32_t m_value;
 };
 
