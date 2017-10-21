@@ -2,15 +2,15 @@
 #include <iostream>
 
 
-Bucket::Bucket( std::uint32_t depth, std::uint32_t size )
+Bucket::Bucket( uint32_t depth, uint32_t size )
 {
     this->depth = depth;
     this->size = size;
 }
 
-int Bucket::insert( int key, std::string value )
+int Bucket::insert( uint32_t key, std::string value )
 {
-    std::map<int,std::string>::iterator it;
+    std::map< uint32_t, std::string >::iterator it;
     it = values.find(key);
     if(it!=values.end())
         return -1;
@@ -20,9 +20,9 @@ int Bucket::insert( int key, std::string value )
     return 1;
 }
 
-int Bucket::remove( int key )
+int Bucket::remove( uint32_t key )
 {
-    std::map<int,std::string>::iterator it;
+    std::map< uint32_t, std::string >::iterator it;
     it = values.find(key);
     if(it!=values.end())
     {
@@ -36,9 +36,9 @@ int Bucket::remove( int key )
     }
 }
 
-int Bucket::update( int key, std::string value )
+int Bucket::update( uint32_t key, std::string value )
 {
-    std::map<int,std::string>::iterator it;
+    std::map< uint32_t, std::string >::iterator it;
     it = values.find(key);
     if(it!=values.end())
     {
@@ -53,9 +53,9 @@ int Bucket::update( int key, std::string value )
     }
 }
 
-std::string Bucket::search( int key )
+std::string Bucket::search( uint32_t key )
 {
-    std::map<int,std::string>::iterator it;
+    std::map< uint32_t, std::string >::iterator it;
     it = values.find(key);
     if(it!=values.end())
     {
@@ -84,26 +84,26 @@ int Bucket::isEmpty()
         return 0;
 }
 
-int Bucket::getDepth()
+uint32_t Bucket::getDepth()
 {
     return depth;
 }
 
-int Bucket::increaseDepth()
+uint32_t Bucket::increaseDepth()
 {
     depth++;
     return depth;
 }
 
-int Bucket::decreaseDepth()
+uint32_t Bucket::decreaseDepth()
 {
     depth--;
     return depth;
 }
 
-std::map< int, std::string > Bucket::copy()
+std::map< uint32_t, std::string > Bucket::copy()
 {
-    std::map<int, std::string> temp(values.begin(),values.end());
+    std::map< uint32_t, std::string > temp(values.begin(),values.end());
     return temp;
 }
 
@@ -114,7 +114,7 @@ void Bucket::clear()
 
 void Bucket::display()
 {
-    std::map<int,std::string>::iterator it;
+    std::map< uint32_t, std::string >::iterator it;
     for(it=values.begin();it!=values.end();it++)
         std::cout<<it->first<<" ";
     std::cout<<std::endl;

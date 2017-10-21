@@ -7,24 +7,24 @@
 class Directory
 {
 public:
-    Directory( std::uint32_t depth, std::uint32_t bucket_size );
-    void insert( int key, std::string value, bool reinserted );
-    void remove( int key, int mode );
-    void update( int key, std::string value );
-    std::string search( int key );
+    Directory( uint32_t depth, uint32_t bucket_size );
+    void insert( uint32_t key, std::string value, bool reinserted );
+    void remove( uint32_t key, int mode );
+    void update( uint32_t key, std::string value );
+    std::string search( uint32_t key );
     void display( bool duplicates );
 
 private:
-    int global_depth;
-    int bucket_size;
+    uint32_t global_depth;
+    uint32_t bucket_size;
     std::vector< Bucket* > buckets;
-    int hash( int n );
-    int pairIndex( int bucket_no, int depth );
+    uint32_t hash( uint32_t n );
+    int pairIndex( uint32_t bucket_no, uint32_t depth );
     void grow();
     void shrink();
-    void split( int bucket_no );
-    void merge( int bucket_no );
-    std::string bucket_id( int n );
+    void split( uint32_t bucket_no );
+    void merge( uint32_t bucket_no );
+    std::string bucket_id( uint32_t n );
 
 };
 

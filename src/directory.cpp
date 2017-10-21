@@ -3,7 +3,7 @@
 #include <set>
 
 
-Directory::Directory( std::uint32_t depth, std::uint32_t bucket_size )
+Directory::Directory( uint32_t depth, uint32_t bucket_size )
 {
     this->global_depth = depth;
     this->bucket_size = bucket_size;
@@ -13,12 +13,12 @@ Directory::Directory( std::uint32_t depth, std::uint32_t bucket_size )
     }
 }
 
-int Directory::hash( int n )
+uint32_t Directory::hash( uint32_t n )
 {
     return n&((1<<global_depth)-1);
 }
 
-int Directory::pairIndex( int bucket_no, int depth )
+int Directory::pairIndex( uint32_t bucket_no, uint32_t depth )
 {
     return bucket_no^(1<<(depth-1));
 }
@@ -40,17 +40,17 @@ void Directory::shrink()
         }
     }
     global_depth--;
-    for( int i = 0 ; i < 1<<global_depth ; i++ )
+    for( uint32_t i = 0 ; i < 1U << global_depth; i++ )
         buckets.pop_back();
 }
 
-void Directory::split( int bucket_no )
+void Directory::split( uint32_t bucket_no )
 {
-    int local_depth,pair_index,index_diff,dir_size,i;
-    std::map<int, std::string> temp;
-    std::map<int, std::string>::iterator it;
+    int pair_index,index_diff,dir_size,i;
+    std::map< uint32_t, std::string > temp;
+    std::map< uint32_t, std::string >::iterator it;
 
-    local_depth = buckets[bucket_no]->increaseDepth();
+    const uint32_t local_depth = buckets[bucket_no]->increaseDepth();
     if(local_depth>global_depth)
         grow();
     pair_index = pairIndex(bucket_no,local_depth);
@@ -67,11 +67,11 @@ void Directory::split( int bucket_no )
         insert((*it).first,(*it).second,1);
 }
 
-void Directory::merge( int bucket_no )
+void Directory::merge( uint32_t bucket_no )
 {
-    int local_depth,pair_index,index_diff,dir_size,i;
+    int pair_index,index_diff,dir_size,i;
 
-    local_depth = buckets[bucket_no]->getDepth();
+    const uint32_t local_depth = buckets[bucket_no]->getDepth();
     pair_index = pairIndex(bucket_no,local_depth);
     index_diff = 1<<local_depth;
     dir_size = 1<<global_depth;
@@ -88,7 +88,7 @@ void Directory::merge( int bucket_no )
     }
 }
 
-std::string Directory::bucket_id( int n )
+std::string Directory::bucket_id( uint32_t n )
 {
     int d;
     std::string s;
@@ -108,9 +108,9 @@ std::string Directory::bucket_id( int n )
     return s;
 }
 
-void Directory::insert( int key, std::string value, bool reinserted )
+void Directory::insert( uint32_t key, std::string value, bool reinserted )
 {
-    int bucket_no = hash(key);
+    uint32_t bucket_no = hash(key);
     int status = buckets[bucket_no]->insert(key,value);
     if(status==1)
     {
@@ -130,7 +130,7 @@ void Directory::insert( int key, std::string value, bool reinserted )
     }
 }
 
-void Directory::remove( int key,int mode )
+void Directory::remove( uint32_t key, int mode )
 {
     int bucket_no = hash(key);
     if(buckets[bucket_no]->remove(key))
@@ -146,13 +146,13 @@ void Directory::remove( int key,int mode )
     }
 }
 
-void Directory::update( int key, std::string value )
+void Directory::update( uint32_t key, std::string value )
 {
     int bucket_no = hash(key);
     buckets[bucket_no]->update(key,value);
 }
 
-std::string Directory::search( int key )
+std::string Directory::search( uint32_t key )
 {
     int bucket_no = hash(key);
     std::cout<<"Searching key "<<key<<" in bucket "<<bucket_id(bucket_no)<<std::endl;
@@ -161,18 +161,17 @@ std::string Directory::search( int key )
 
 void Directory::display( bool duplicates )
 {
-    int j,d;
     std::string s;
     std::set<std::string> shown;
     std::cout<<"Global depth : "<<global_depth<<std::endl;
     for( std::size_t i=0;i<buckets.size();i++)
     {
-        d = buckets[i]->getDepth();
+        const uint32_t d = buckets[i]->getDepth();
         s = bucket_id(i);
         if(duplicates || shown.find(s)==shown.end())
         {
             shown.insert(s);
-            for(j=d;j<=global_depth;j++)
+            for(uint32_t j = d; j <= global_depth; j++)
                 std::cout<<" ";
             std::cout<<s<<" => ";
             buckets[i]->display();

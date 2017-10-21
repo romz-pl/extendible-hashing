@@ -14,7 +14,7 @@ Key::Key()
 //
 //
 //
-Key::Key( std::uint32_t value )
+Key::Key( uint32_t value )
     : m_value( value )
 {
 
@@ -25,7 +25,7 @@ Key::Key( std::uint32_t value )
 //
 std::size_t Key::GetHash() const
 {
-//    const std::hash< std::uint32_t > fun; // hashing object
+//    const std::hash< uint32_t > fun; // hashing object
 //    const std::size_t ret = fun( m_value );
 //    return ret;
     // return m_value;

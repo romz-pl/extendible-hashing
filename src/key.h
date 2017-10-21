@@ -7,7 +7,7 @@ class Key
 {
 public:
     Key();
-    Key( std::uint32_t value );
+    Key( uint32_t value );
     ~Key() = default;
 
     std::size_t GetHash() const;
@@ -22,7 +22,7 @@ private:
 
 public:
 //private:
-    std::uint32_t m_value;
+    uint32_t m_value;
 };
 
 #endif
