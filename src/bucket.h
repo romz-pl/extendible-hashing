@@ -7,7 +7,7 @@
 class Bucket
 {
 public:
-    Bucket( int depth, int size );
+    Bucket( std::uint32_t depth, std::uint32_t size );
     int insert( int key, std::string value );
     int remove( int key );
     int update( int key, std::string value );
@@ -22,8 +22,8 @@ public:
     void display();
 
 private:
-    int depth;
-    int size;
+    std::uint32_t depth;
+    std::uint32_t size;
     std::map< int, std::string > values;
 
 };

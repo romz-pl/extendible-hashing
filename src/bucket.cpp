@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-Bucket::Bucket( int depth, int size )
+Bucket::Bucket( std::uint32_t depth, std::uint32_t size )
 {
     this->depth = depth;
     this->size = size;

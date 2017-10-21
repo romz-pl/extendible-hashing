@@ -3,7 +3,7 @@
 #include <set>
 
 
-Directory::Directory( int depth, int bucket_size )
+Directory::Directory( std::uint32_t depth, std::uint32_t bucket_size )
 {
     this->global_depth = depth;
     this->bucket_size = bucket_size;

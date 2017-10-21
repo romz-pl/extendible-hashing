@@ -7,7 +7,7 @@
 class Directory
 {
 public:
-    Directory( int depth, int bucket_size );
+    Directory( std::uint32_t depth, std::uint32_t bucket_size );
     void insert( int key, std::string value, bool reinserted );
     void remove( int key, int mode );
     void update( int key, std::string value );
