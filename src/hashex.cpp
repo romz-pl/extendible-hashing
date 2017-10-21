@@ -13,7 +13,7 @@ HashEx::HashEx( int depth, int bucket_size )
 //
 //
 //
-Data HashEx::Get( const Key& key ) const
+Data HashEx::Get( const Key& /*key*/ ) const
 {
     return Data();
     // return m_dir.search( key );
@@ -22,7 +22,7 @@ Data HashEx::Get( const Key& key ) const
 //
 //
 //
-void HashEx::Put( const Key& key, const Data& data )
+void HashEx::Put( const Key& /*key*/, const Data& /*data*/ )
 {
     // m_dir.insert( key.m, data, false );
 }

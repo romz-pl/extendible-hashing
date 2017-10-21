@@ -32,17 +32,15 @@ void Directory::grow()
 
 void Directory::shrink()
 {
-    int i,flag=1;
-    for( i=0 ; i<buckets.size() ; i++ )
+    for( std::size_t i=0 ; i<buckets.size() ; i++ )
     {
         if(buckets[i]->getDepth()==global_depth)
         {
-            flag=0;
             return;
         }
     }
     global_depth--;
-    for(i = 0 ; i < 1<<global_depth ; i++ )
+    for( int i = 0 ; i < 1<<global_depth ; i++ )
         buckets.pop_back();
 }
 
@@ -163,11 +161,11 @@ void Directory::search( int key )
 
 void Directory::display( bool duplicates )
 {
-    int i,j,d;
+    int j,d;
     std::string s;
     std::set<std::string> shown;
     std::cout<<"Global depth : "<<global_depth<<std::endl;
-    for(i=0;i<buckets.size();i++)
+    for( std::size_t i=0;i<buckets.size();i++)
     {
         d = buckets[i]->getDepth();
         s = bucket_id(i);

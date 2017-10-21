@@ -69,7 +69,7 @@ void Bucket::search( int key )
 
 int Bucket::isFull()
 {
-    if(values.size()==size)
+    if(values.size() == static_cast< std::size_t >( size ) )
         return 1;
     else
         return 0;
