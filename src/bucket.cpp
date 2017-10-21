@@ -53,13 +53,12 @@ int Bucket::update( uint32_t key, std::string value )
     }
 }
 
-std::string Bucket::search( uint32_t key )
+std::string Bucket::search( uint32_t key ) const
 {
-    std::map< uint32_t, std::string >::iterator it;
-    it = values.find(key);
-    if(it!=values.end())
+    const auto it = values.find( key );
+    if( it != values.end() )
     {
-        std::cout<<"Value = "<<it->second<<std::endl;
+        std::cout << "Value = " << it->second << std::endl;
         return it->second;
     }
     else
@@ -78,7 +77,7 @@ bool Bucket::isEmpty() const
     return ( values.size() == 0 );
 }
 
-uint32_t Bucket::getDepth()
+uint32_t Bucket::getDepth() const
 {
     return depth;
 }
@@ -95,10 +94,9 @@ uint32_t Bucket::decreaseDepth()
     return depth;
 }
 
-std::map< uint32_t, std::string > Bucket::copy()
+std::map< uint32_t, std::string > Bucket::copy() const
 {
-    std::map< uint32_t, std::string > temp(values.begin(),values.end());
-    return temp;
+    return values;
 }
 
 void Bucket::clear()
@@ -106,10 +104,10 @@ void Bucket::clear()
     values.clear();
 }
 
-void Bucket::display()
+void Bucket::display() const
 {
-    std::map< uint32_t, std::string >::iterator it;
-    for(it=values.begin();it!=values.end();it++)
-        std::cout<<it->first<<" ";
-    std::cout<<std::endl;
+    for( const auto& v : values )
+        std::cout << v.first << " ";
+
+    std::cout << std::endl;
 }

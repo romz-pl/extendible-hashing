@@ -12,15 +12,15 @@ public:
     int insert( uint32_t key, std::string value );
     int remove( uint32_t key );
     int update( uint32_t key, std::string value );
-    std::string search( uint32_t key );
+    std::string search( uint32_t key ) const;
     bool isFull() const;
     bool isEmpty() const;
-    uint32_t getDepth();
+    uint32_t getDepth() const;
     uint32_t increaseDepth();
     uint32_t decreaseDepth();
-    std::map< uint32_t, std::string > copy();
+    std::map< uint32_t, std::string > copy() const;
     void clear();
-    void display();
+    void display() const;
 
 private:
     uint32_t depth;

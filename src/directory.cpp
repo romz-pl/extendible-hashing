@@ -13,14 +13,14 @@ Directory::Directory( uint32_t depth, uint32_t bucket_size )
     }
 }
 
-uint32_t Directory::hash( uint32_t n )
+uint32_t Directory::hash( uint32_t n ) const
 {
-    return n&((1<<global_depth)-1);
+    return n & ( ( 1 << global_depth ) - 1 );
 }
 
-int Directory::pairIndex( uint32_t bucket_no, uint32_t depth )
+int Directory::pairIndex( uint32_t bucket_no, uint32_t depth ) const
 {
-    return bucket_no^(1<<(depth-1));
+    return bucket_no ^ ( 1 << ( depth - 1 ) );
 }
 
 void Directory::grow()
@@ -88,7 +88,7 @@ void Directory::merge( uint32_t bucket_no )
     }
 }
 
-std::string Directory::bucket_id( uint32_t n )
+std::string Directory::bucket_id( uint32_t n ) const
 {
     int d;
     std::string s;
@@ -152,29 +152,29 @@ void Directory::update( uint32_t key, std::string value )
     buckets[bucket_no]->update(key,value);
 }
 
-std::string Directory::search( uint32_t key )
+std::string Directory::search( uint32_t key ) const
 {
-    int bucket_no = hash(key);
-    std::cout<<"Searching key "<<key<<" in bucket "<<bucket_id(bucket_no)<<std::endl;
-    return buckets[bucket_no]->search(key);
+    uint32_t bucket_no = hash( key );
+    std::cout << "Searching key " << key << " in bucket " << bucket_id( bucket_no ) << std::endl;
+    return buckets[ bucket_no ]->search( key );
 }
 
-void Directory::display( bool duplicates )
+void Directory::display( bool duplicates ) const
 {
     std::string s;
-    std::set<std::string> shown;
-    std::cout<<"Global depth : "<<global_depth<<std::endl;
-    for( std::size_t i=0;i<buckets.size();i++)
+    std::set< std::string>  shown;
+    std::cout << "Global depth : " << global_depth << std::endl;
+    for( std::size_t i = 0; i < buckets.size(); i++ )
     {
-        const uint32_t d = buckets[i]->getDepth();
-        s = bucket_id(i);
-        if(duplicates || shown.find(s)==shown.end())
+        const uint32_t d = buckets[ i ]->getDepth();
+        s = bucket_id( i );
+        if( duplicates || shown.find( s ) == shown.end() )
         {
-            shown.insert(s);
+            shown.insert( s );
             for(uint32_t j = d; j <= global_depth; j++)
-                std::cout<<" ";
-            std::cout<<s<<" => ";
-            buckets[i]->display();
+                std::cout << " ";
+            std::cout << s << " => ";
+            buckets[ i ]->display();
         }
     }
 }
