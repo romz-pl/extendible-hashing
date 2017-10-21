@@ -1,5 +1,6 @@
 #include "bucket.h"
 #include <stdexcept>
+#include <cassert>
 
 //
 //
@@ -44,4 +45,22 @@ Data Bucket::Get( const Key& key ) const
 Key Bucket::GetKey( ) const
 {
     return m_key;
+}
+
+//
+//
+//
+bool Bucket::IsFull() const
+{
+    return !m_data.empty();
+}
+
+//
+//
+//
+void Bucket::Put( const Key& key, const Data& data )
+{
+    m_key = key;
+    assert( m_data.empty() );
+    m_data.push_front( data );
 }

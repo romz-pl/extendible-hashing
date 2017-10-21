@@ -13,8 +13,11 @@ public:
     ~Bucket() = default;
 
     Data Get( const Key &key ) const;
+    void Put( const Key& key, const Data& data );
 
     Key GetKey( ) const;
+
+    bool IsFull() const;
 
 private:
     std::uint32_t m_localDepth;
