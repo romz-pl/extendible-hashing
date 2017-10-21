@@ -4,6 +4,15 @@
 //
 //
 //
+Bucket::Bucket()
+    : m_localDepth( 0 )
+{
+
+}
+
+//
+//
+//
 Bucket::Bucket( const Key& key, const Data& data )
     : m_localDepth( 0 )
     , m_key( key )

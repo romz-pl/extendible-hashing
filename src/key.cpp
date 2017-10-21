@@ -1,6 +1,19 @@
 #include "key.h"
 //#include <functional>
 
+
+//
+//
+//
+Key::Key()
+    : m_value( 0 )
+{
+
+}
+
+//
+//
+//
 Key::Key( std::uint32_t value )
     : m_value( value )
 {

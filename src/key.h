@@ -6,6 +6,7 @@
 class Key
 {
 public:
+    Key();
     Key( std::uint32_t value );
     ~Key() = default;
 

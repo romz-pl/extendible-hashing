@@ -7,6 +7,7 @@
 class Bucket
 {
 public:
+    Bucket();
     Bucket( const Key& key, const Data& data );
     ~Bucket() = default;
 

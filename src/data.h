@@ -6,6 +6,7 @@
 class Data
 {
 public:
+    Data();
     Data( const std::string& v );
     ~Data() = default;
 
