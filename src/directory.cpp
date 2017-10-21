@@ -3,8 +3,6 @@
 #include <set>
 
 
-/* Directory class functions */
-
 Directory::Directory(int depth, int bucket_size)
 {
     this->global_depth = depth;
