@@ -126,25 +126,32 @@ std::string Directory::bucket_id( uint32_t n ) const
 void Directory::insert( uint32_t key, std::string value, bool reinserted )
 {
     const uint32_t bucket_no = hash( key );
-    const int status = m_buckets[ bucket_no ]->insert( key, value );
-    if( status == 1 )
-    {
-        if( !reinserted )
-            std::cout << "Inserted key " << key << " in bucket " << bucket_id( bucket_no ) << std::endl;
-        else
-            std::cout << "Moved key " << key << " to bucket " << bucket_id( bucket_no ) << std::endl;
-    }
-    else if( status == 0 )
-    {
-        split( bucket_no );
-        insert( key, value, reinserted );
-    }
-    else
+
+    Bucket* b = m_buckets[ bucket_no ];
+    if( b->hasKey( key ) )
     {
         std::stringstream buffer;
         buffer << "Key " << key << " already exists in bucket " << bucket_id( bucket_no );
         throw std::runtime_error( buffer.str() );
     }
+
+    if( b->isFull() )
+    {
+        split( bucket_no );
+        insert( key, value, reinserted );
+        return;
+    }
+
+    b->insert( key, value );
+    if( !reinserted )
+    {
+        std::cout << "Inserted key " << key << " in bucket " << bucket_id( bucket_no ) << std::endl;
+    }
+    else
+    {
+        std::cout << "Moved key " << key << " to bucket " << bucket_id( bucket_no ) << std::endl;
+    }
+
 }
 
 void Directory::remove( uint32_t key, int mode )

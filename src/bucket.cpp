@@ -1,6 +1,7 @@
 #include "bucket.h"
 #include <iostream>
 #include <sstream>
+#include <cassert>
 
 
 Bucket::Bucket( uint32_t depth, uint32_t size )
@@ -10,16 +11,12 @@ Bucket::Bucket( uint32_t depth, uint32_t size )
 
 }
 
-int Bucket::insert( uint32_t key, std::string value )
+void Bucket::insert( uint32_t key, std::string value )
 {
-    if( m_values.find( key ) != m_values.end() )
-        return -1;
-
-    if( isFull() )
-        return 0;
+    assert( m_values.find( key ) == m_values.end() );
+    assert( !isFull() );
 
     m_values[ key ] = value;
-    return 1;
 }
 
 void Bucket::remove( uint32_t key )
@@ -110,4 +107,9 @@ void Bucket::display() const
         std::cout << v.first << " ";
 
     std::cout << std::endl;
+}
+
+bool Bucket::hasKey( uint32_t key ) const
+{
+    return ( m_values.find( key ) != m_values.end() );
 }
