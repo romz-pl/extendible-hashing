@@ -14,6 +14,8 @@ public:
     Data Get( const Key& key ) const;
     void Put( const Key& key, const Data& data );
 
+    void Print() const;
+
 private:
     std::size_t GetEntryId( const Key &key ) const;
 
