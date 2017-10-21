@@ -5,9 +5,9 @@
 //
 //
 //
-Bucket::Bucket()
+Bucket::Bucket( uint32_t localDepth )
     : m_empty( true )
-    , m_localDepth( 0 )
+    , m_localDepth( localDepth )
 {
 
 }

@@ -7,7 +7,7 @@
 class Bucket
 {
 public:
-    Bucket();
+    Bucket( std::uint32_t localDepth );
     Bucket( const Key& key, const Data& data, std::uint32_t localDepth );
     ~Bucket() = default;
 
