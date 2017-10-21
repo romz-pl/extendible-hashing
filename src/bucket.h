@@ -23,9 +23,9 @@ public:
     void display() const;
 
 private:
-    uint32_t depth;
-    uint32_t size;
-    std::map< uint32_t, std::string > values;
+    uint32_t m_depth;
+    const uint32_t m_size;
+    std::map< uint32_t, std::string > m_values;
 
 };
 

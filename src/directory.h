@@ -15,16 +15,21 @@ public:
     void display( bool duplicates ) const;
 
 private:
-    uint32_t global_depth;
-    uint32_t bucket_size;
-    std::vector< Bucket* > buckets;
+    static int pairIndex( uint32_t bucket_no, uint32_t depth );
+
     uint32_t hash( uint32_t n ) const;
-    int pairIndex( uint32_t bucket_no, uint32_t depth ) const;
     void grow();
     void shrink();
     void split( uint32_t bucket_no );
     void merge( uint32_t bucket_no );
     std::string bucket_id( uint32_t n ) const;
+
+
+private:
+    uint32_t m_global_depth;
+    uint32_t m_bucket_size;
+    std::vector< Bucket* > m_buckets;
+
 
 };
 

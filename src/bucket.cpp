@@ -3,30 +3,30 @@
 
 
 Bucket::Bucket( uint32_t depth, uint32_t size )
+    : m_depth( depth )
+    , m_size( size )
 {
-    this->depth = depth;
-    this->size = size;
+
 }
 
 int Bucket::insert( uint32_t key, std::string value )
 {
-    std::map< uint32_t, std::string >::iterator it;
-    it = values.find(key);
-    if(it!=values.end())
+    if( m_values.find( key ) != m_values.end() )
         return -1;
-    if(isFull())
+
+    if( isFull() )
         return 0;
-    values[key] = value;
+
+    m_values[ key ] = value;
     return 1;
 }
 
 int Bucket::remove( uint32_t key )
 {
-    std::map< uint32_t, std::string >::iterator it;
-    it = values.find(key);
-    if(it!=values.end())
+    const auto it = m_values.find( key );
+    if( it != m_values.end() )
     {
-        values.erase(it);
+        m_values.erase( it );
         return 1;
     }
     else
@@ -38,25 +38,24 @@ int Bucket::remove( uint32_t key )
 
 int Bucket::update( uint32_t key, std::string value )
 {
-    std::map< uint32_t, std::string >::iterator it;
-    it = values.find(key);
-    if(it!=values.end())
+    const auto it = m_values.find( key );
+    if( it != m_values.end() )
     {
-        values[key] = value;
-        std::cout<<"Value updated"<<std::endl;
+        m_values[ key ] = value;
+        std::cout << "Value updated" << std::endl;
         return 1;
     }
     else
     {
-        std::cout<<"Cannot update : This key does not exists"<<std::endl;
+        std::cout << "Cannot update : This key does not exists" << std::endl;
         return 0;
     }
 }
 
 std::string Bucket::search( uint32_t key ) const
 {
-    const auto it = values.find( key );
-    if( it != values.end() )
+    const auto it = m_values.find( key );
+    if( it != m_values.end() )
     {
         std::cout << "Value = " << it->second << std::endl;
         return it->second;
@@ -69,44 +68,44 @@ std::string Bucket::search( uint32_t key ) const
 
 bool Bucket::isFull() const
 {
-    return ( values.size() == size );
+    return ( m_values.size() == m_size );
 }
 
 bool Bucket::isEmpty() const
 {
-    return ( values.size() == 0 );
+    return m_values.empty();
 }
 
 uint32_t Bucket::getDepth() const
 {
-    return depth;
+    return m_depth;
 }
 
 uint32_t Bucket::increaseDepth()
 {
-    depth++;
-    return depth;
+    m_depth++;
+    return m_depth;
 }
 
 uint32_t Bucket::decreaseDepth()
 {
-    depth--;
-    return depth;
+    m_depth--;
+    return m_depth;
 }
 
 std::map< uint32_t, std::string > Bucket::copy() const
 {
-    return values;
+    return m_values;
 }
 
 void Bucket::clear()
 {
-    values.clear();
+    m_values.clear();
 }
 
 void Bucket::display() const
 {
-    for( const auto& v : values )
+    for( const auto& v : m_values )
         std::cout << v.first << " ";
 
     std::cout << std::endl;
