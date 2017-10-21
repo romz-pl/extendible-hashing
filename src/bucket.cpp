@@ -85,3 +85,11 @@ void Bucket::IncLocalDepth()
 {
     m_localDepth++;
 }
+
+//
+//
+//
+void Bucket::SetEmpty()
+{
+    m_empty = true;
+}

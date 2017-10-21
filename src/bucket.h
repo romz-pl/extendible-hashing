@@ -21,6 +21,8 @@ public:
     std::uint32_t GetLocalDepth() const;
     void IncLocalDepth();
 
+    void SetEmpty();
+
 private:
     bool m_empty;
 
