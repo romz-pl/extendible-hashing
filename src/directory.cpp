@@ -10,6 +10,10 @@ Directory::Directory()
 {
     const std::size_t size = ( 1 << m_globalDepth );
     m_dir.resize( size, nullptr );
+
+    for( Bucket*&b : m_dir )
+        b = new Bucket();
+
 }
 
 //
