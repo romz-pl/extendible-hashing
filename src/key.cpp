@@ -1,15 +1,5 @@
 #include "key.h"
-//#include <functional>
 
-
-//
-//
-//
-Key::Key()
-    : m_value( 0 )
-{
-
-}
 
 //
 //
@@ -25,11 +15,7 @@ Key::Key( uint32_t value )
 //
 std::size_t Key::GetHash() const
 {
-//    const std::hash< uint32_t > fun; // hashing object
-//    const std::size_t ret = fun( m_value );
-//    return ret;
-    // return m_value;
-
+    // return Hash64( m_value );
     return Hash32( m_value );
 }
 
@@ -58,7 +44,7 @@ uint64_t Key::Hash64( uint64_t x )
 //
 //
 //
-bool Key::operator== (const Key& key ) const
+bool Key::operator==( const Key& key ) const
 {
     return m_value == key.m_value;
 }
@@ -66,7 +52,7 @@ bool Key::operator== (const Key& key ) const
 //
 //
 //
-bool Key::operator!= (const Key& key ) const
+bool Key::operator!=( const Key& key ) const
 {
     return !( m_value == key.m_value );
 }
@@ -75,7 +61,7 @@ bool Key::operator!= (const Key& key ) const
 //
 //
 //
-bool Key::operator< (const Key& key ) const
+bool Key::operator<( const Key& key ) const
 {
     return m_value < key.m_value;
 }
