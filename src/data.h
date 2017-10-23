@@ -7,11 +7,13 @@ class Data
 {
 public:
     Data();
-    Data( const std::string& v );
+    explicit Data( const std::string& v );
     ~Data() = default;
 
     bool operator == ( const Data& v ) const;
     bool operator != ( const Data& v ) const;
+
+    std::string ToString() const;
 
 //private:
     std::string m_data;
