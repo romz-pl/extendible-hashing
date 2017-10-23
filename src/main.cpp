@@ -51,7 +51,7 @@ void Check()
     const int initial_global_depth = 2;
     const int bucket_size = 3;
     Directory dir( initial_global_depth, bucket_size );
-    std::unordered_map< Key, std::string > stlMap;
+    std::unordered_map< Key, Data > stlMap;
 
     const std::size_t eltNo = 1400;
     std::vector< Key > key;
@@ -63,7 +63,7 @@ void Check()
 
      for( Key k : key )
      {
-         const std::string data = GetRandomString();
+         const Data data = Data( GetRandomString() );
 
          dir.insert( k, data, 0);
          // dir.display( true );
@@ -75,8 +75,8 @@ void Check()
 
      for( Key k : key )
      {
-         const std::string dataA = dir.search( k );
-         const std::string dataB = stlMap.at( k );
+         const Data dataA = dir.search( k );
+         const Data dataB = stlMap.at( k );
 
          if( dataA != dataB )
          {
