@@ -1,6 +1,15 @@
 #ifndef HASHEX_KEY_H
 #define HASHEX_KEY_H
 
+//
+// 1. This represents key in hash table.
+//
+// 2. Current implemenation is specific for type "uint32_t".
+//
+// 3. If you want other type, just change "uint32_t" to your required type T,
+//    and make sure the compariosion operator are available for type T.
+//
+
 #include <cstdint>
 #include <string>
 
