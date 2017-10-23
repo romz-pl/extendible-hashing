@@ -4,6 +4,12 @@
 #include <cassert>
 #include <sstream>
 
+#ifdef NOLOGGING
+#  define LOGGER(x)
+#else
+#  define LOGGER(x) x
+#endif
+
 
 Directory::Directory( uint32_t depth, uint32_t bucket_size )
     : m_global_depth( depth)
@@ -144,11 +150,11 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
     if( !reinserted )
     {
         m_count++;
-        std::cout << "Inserted key " << key.ToString() << " in bucket " << bucket_id( bucket_no ) << std::endl;
+        LOGGER( std::cout << "Inserted key " << key.ToString() << " in bucket " << bucket_id( bucket_no ) << std::endl; )
     }
     else
     {
-        std::cout << "Moved key " << key.ToString() << " to bucket " << bucket_id( bucket_no ) << std::endl;
+        LOGGER( std::cout << "Moved key " << key.ToString() << " to bucket " << bucket_id( bucket_no ) << std::endl; )
     }
 
 }
@@ -158,7 +164,8 @@ void Directory::remove( const Key& key, int mode )
     const uint32_t bucket_no = hash( key );
     m_buckets[ bucket_no ]->remove( key );
     m_count--;
-    std::cout << "Deleted key " << key.ToString() << " from bucket " << bucket_id( bucket_no ) << std::endl;
+
+    LOGGER( std::cout << "Deleted key " << key.ToString() << " from bucket " << bucket_id( bucket_no ) << std::endl; )
 
     if( mode > 0 )
     {
@@ -175,16 +182,19 @@ void Directory::update( const Key &key, const Data &value )
 {
     const uint32_t bucket_no = hash( key );
     m_buckets[ bucket_no ]->update( key, value );
-    std::cout << "Value updated" << std::endl;
+
+    LOGGER( std::cout << "Value updated" << std::endl; )
 }
 
 Data Directory::search( const Key& key ) const
 {
     const uint32_t bucket_no = hash( key );
-    std::cout << "Searching key " << key.ToString() << " in bucket " << bucket_id( bucket_no ) << std::endl;
+
+    LOGGER( std::cout << "Searching key " << key.ToString() << " in bucket " << bucket_id( bucket_no ) << std::endl; )
 
     const Data value = m_buckets[ bucket_no ]->search( key );
-    std::cout << "Value = " << value.ToString() << std::endl;
+    LOGGER( std::cout << "Value = " << value.ToString() << std::endl; )
+
     return value;
 }
 

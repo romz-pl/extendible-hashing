@@ -6,9 +6,14 @@
 # Name of GNU compiler
 # CXX := g++
 
+
+#
+# If you want logging messages, remove the compilation flag -DNOLOGGING
+#
+
 #Compilation flags
-# CXXFLAGS := -std=c++11 -DNDEBUG -O2 -Wall -mtune=native -march=native
-CXXFLAGS := -std=c++11 -g -O0 -Wall
+CXXFLAGS := -std=c++11 -DNDEBUG -O2 -Wall -DNOLOGGING -mtune=native -march=native
+# CXXFLAGS := -std=c++11 -g -O0 -Wall -DNOLOGGING
 
 # Required libraries 
 CXXLIB = 
