@@ -32,3 +32,11 @@ bool Data::operator != ( const Data& v ) const
 {
     return !( m_data == v.m_data );
 }
+
+//
+//
+//
+std::string Data::ToString() const
+{
+    return m_data;
+}
