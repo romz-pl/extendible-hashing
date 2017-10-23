@@ -50,7 +50,7 @@ void Check()
 
     const int initial_global_depth = 2;
     const int bucket_size = 3;
-    Directory dir( initial_global_depth, bucket_size );
+    HashEx hashEx( initial_global_depth, bucket_size );
     std::unordered_map< Key, Data > stlMap;
 
     const std::size_t eltNo = 1400;
@@ -65,8 +65,8 @@ void Check()
      {
          const Data data = Data( GetRandomString() );
 
-         dir.insert( k, data, 0);
-         // dir.display( true );
+         hashEx.Put( k, data );
+         // hashEx.Print( true );
 
          stlMap.insert( std::make_pair( k, data ) );
      }
@@ -75,7 +75,7 @@ void Check()
 
      for( Key k : key )
      {
-         const Data dataA = dir.search( k );
+         const Data dataA = hashEx.Get( k );
          const Data dataB = stlMap.at( k );
 
          if( dataA != dataB )
@@ -83,7 +83,7 @@ void Check()
              throw std::runtime_error( "Insert Error" );
          }
      }
-     if( dir.count() != stlMap.size() )
+     if( hashEx.Count() != stlMap.size() )
      {
          throw std::runtime_error( "Insert Error 2" );
      }
@@ -92,11 +92,11 @@ void Check()
 
      for( Key k : key )
      {
-         dir.remove( k, 1 );
+         hashEx.Delete( k );
          stlMap.erase( k );
      }
 
-     if( dir.count() != stlMap.size() )
+     if( hashEx.Count() != stlMap.size() )
      {
          throw std::runtime_error( "Delete Error" );
      }
