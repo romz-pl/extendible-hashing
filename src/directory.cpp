@@ -4,6 +4,9 @@
 #include <cassert>
 #include <sstream>
 
+//
+//
+//
 #ifdef NOLOGGING
 #  define LOGGER(x)
 #else
@@ -11,6 +14,9 @@
 #endif
 
 
+//
+//
+//
 Directory::Directory( uint32_t depth, uint32_t bucket_size )
     : m_global_depth( depth)
     , m_bucket_size( bucket_size )
@@ -24,17 +30,26 @@ Directory::Directory( uint32_t depth, uint32_t bucket_size )
     }
 }
 
+//
+//
+//
 uint32_t Directory::hash( const Key& key ) const
 {
     const size_t n = key.GetHash();
     return n & ( ( 1 << m_global_depth ) - 1 );
 }
 
+//
+//
+//
 uint32_t Directory::pairIndex( uint32_t bucket_no, uint32_t depth )
 {
     return bucket_no ^ ( 1 << ( depth - 1 ) );
 }
 
+//
+//
+//
 void Directory::grow()
 {
     const size_t ss = m_buckets.size();
@@ -47,6 +62,9 @@ void Directory::grow()
     m_global_depth++;
 }
 
+//
+//
+//
 void Directory::shrink()
 {
     for( size_t i = 0 ; i < m_buckets.size() ; i++ )
@@ -61,6 +79,9 @@ void Directory::shrink()
         m_buckets.pop_back();
 }
 
+//
+//
+//
 void Directory::split( uint32_t bucket_no )
 {
     const uint32_t local_depth = m_buckets[ bucket_no ]->increaseDepth();
@@ -85,6 +106,9 @@ void Directory::split( uint32_t bucket_no )
         insert( v.first, v.second, 1 );
 }
 
+//
+//
+//
 void Directory::merge( uint32_t bucket_no )
 {
     const uint32_t local_depth = m_buckets[ bucket_no ]->getDepth();
@@ -106,6 +130,9 @@ void Directory::merge( uint32_t bucket_no )
     }
 }
 
+//
+//
+//
 std::string Directory::bucket_id( uint32_t n ) const
 {
     std::string s;
@@ -127,6 +154,9 @@ std::string Directory::bucket_id( uint32_t n ) const
     return s;
 }
 
+//
+//
+//
 void Directory::insert( const Key &key, const Data &value, bool reinserted )
 {
     const uint32_t bucket_no = hash( key );
@@ -159,6 +189,9 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
 
 }
 
+//
+//
+//
 void Directory::remove( const Key& key, int mode )
 {
     const uint32_t bucket_no = hash( key );
@@ -178,6 +211,9 @@ void Directory::remove( const Key& key, int mode )
     }
 }
 
+//
+//
+//
 void Directory::update( const Key &key, const Data &value )
 {
     const uint32_t bucket_no = hash( key );
@@ -186,6 +222,9 @@ void Directory::update( const Key &key, const Data &value )
     LOGGER( std::cout << "Value updated" << std::endl; )
 }
 
+//
+//
+//
 Data Directory::search( const Key& key ) const
 {
     const uint32_t bucket_no = hash( key );
@@ -198,6 +237,9 @@ Data Directory::search( const Key& key ) const
     return value;
 }
 
+//
+//
+//
 void Directory::display( bool duplicates ) const
 {
     std::set< std::string>  shown;
@@ -218,6 +260,9 @@ void Directory::display( bool duplicates ) const
     }
 }
 
+//
+//
+//
 size_t Directory::count() const
 {
     return m_count;

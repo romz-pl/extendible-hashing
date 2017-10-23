@@ -3,7 +3,9 @@
 #include <sstream>
 #include <cassert>
 
-
+//
+//
+//
 Bucket::Bucket( uint32_t depth, uint32_t size )
     : m_depth( depth )
     , m_maxAllowedSize( size )
@@ -14,6 +16,9 @@ Bucket::Bucket( uint32_t depth, uint32_t size )
     }
 }
 
+//
+//
+//
 void Bucket::insert(const Key& key, const Data &value )
 {
     assert( m_values.find( key ) == m_values.end() );
@@ -22,6 +27,9 @@ void Bucket::insert(const Key& key, const Data &value )
     m_values[ key ] = value;
 }
 
+//
+//
+//
 void Bucket::remove( const Key& key )
 {
     const auto it = m_values.find( key );
@@ -35,6 +43,9 @@ void Bucket::remove( const Key& key )
     m_values.erase( it );
 }
 
+//
+//
+//
 void Bucket::update(const Key &key, const Data &value )
 {
     const auto it = m_values.find( key );
@@ -48,6 +59,9 @@ void Bucket::update(const Key &key, const Data &value )
     m_values[ key ] = value;
 }
 
+//
+//
+//
 Data Bucket::search( const Key& key ) const
 {
     const auto it = m_values.find( key );
@@ -61,43 +75,67 @@ Data Bucket::search( const Key& key ) const
     return it->second;
 }
 
+//
+//
+//
 bool Bucket::isFull() const
 {
     return ( m_values.size() == m_maxAllowedSize );
 }
 
+//
+//
+//
 bool Bucket::isEmpty() const
 {
     return m_values.empty();
 }
 
+//
+//
+//
 uint32_t Bucket::getDepth() const
 {
     return m_depth;
 }
 
+//
+//
+//
 uint32_t Bucket::increaseDepth()
 {
     m_depth++;
     return m_depth;
 }
 
+//
+//
+//
 uint32_t Bucket::decreaseDepth()
 {
     m_depth--;
     return m_depth;
 }
 
+//
+//
+//
 std::map< Key, Data > Bucket::copy() const
 {
     return m_values;
 }
 
+//
+//
+//
 void Bucket::clear()
 {
     m_values.clear();
 }
 
+//
+//
+//
 void Bucket::display() const
 {
     for( const auto& v : m_values )
@@ -106,6 +144,9 @@ void Bucket::display() const
     std::cout << std::endl;
 }
 
+//
+//
+//
 bool Bucket::hasKey( const Key &key ) const
 {
     return ( m_values.find( key ) != m_values.end() );
