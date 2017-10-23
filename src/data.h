@@ -15,7 +15,7 @@ public:
 
     std::string ToString() const;
 
-//private:
+private:
     std::string m_data;
 };
 
