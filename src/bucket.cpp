@@ -14,7 +14,7 @@ Bucket::Bucket( uint32_t depth, uint32_t size )
     }
 }
 
-void Bucket::insert( uint32_t key, std::string value )
+void Bucket::insert( const Key& key, std::string value )
 {
     assert( m_values.find( key ) == m_values.end() );
     assert( !isFull() );
@@ -22,39 +22,39 @@ void Bucket::insert( uint32_t key, std::string value )
     m_values[ key ] = value;
 }
 
-void Bucket::remove( uint32_t key )
+void Bucket::remove( const Key& key )
 {
     const auto it = m_values.find( key );
     if( it == m_values.end() )
     {
         std::stringstream buffer;
-        buffer << "Cannot remove. Key '" << key << "' does not exists.";
+        buffer << "Cannot remove. Key '" << key.ToString() << "' does not exists.";
         throw std::runtime_error( buffer.str() );
     }
 
     m_values.erase( it );
 }
 
-void Bucket::update( uint32_t key, std::string value )
+void Bucket::update( const Key &key, std::string value )
 {
     const auto it = m_values.find( key );
     if( it == m_values.end() )
     {
         std::stringstream buffer;
-        buffer << "Cannot update. Key '" << key << "' does not exists.";
+        buffer << "Cannot update. Key '" << key.ToString() << "' does not exists.";
         throw std::runtime_error( buffer.str() );
     }
 
     m_values[ key ] = value;
 }
 
-std::string Bucket::search( uint32_t key ) const
+std::string Bucket::search( const Key& key ) const
 {
     const auto it = m_values.find( key );
     if( it == m_values.end() )
     {
         std::stringstream buffer;
-        buffer << "Not found. Key '" << key << "' does not exists.";
+        buffer << "Not found. Key '" << key.ToString() << "' does not exists.";
         throw std::runtime_error( buffer.str() );
     }
 
@@ -88,7 +88,7 @@ uint32_t Bucket::decreaseDepth()
     return m_depth;
 }
 
-std::map< uint32_t, std::string > Bucket::copy() const
+std::map< Key, std::string > Bucket::copy() const
 {
     return m_values;
 }
@@ -101,12 +101,12 @@ void Bucket::clear()
 void Bucket::display() const
 {
     for( const auto& v : m_values )
-        std::cout << v.first << " ";
+        std::cout << v.first.ToString() << " ";
 
     std::cout << std::endl;
 }
 
-bool Bucket::hasKey( uint32_t key ) const
+bool Bucket::hasKey( const Key &key ) const
 {
     return ( m_values.find( key ) != m_values.end() );
 }
