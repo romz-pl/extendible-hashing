@@ -13,6 +13,7 @@ public:
     void update( uint32_t key, std::string value );
     std::string search( uint32_t key ) const;
     void display( bool duplicates ) const;
+    size_t count() const;
 
 private:
     static uint32_t pairIndex( uint32_t bucket_no, uint32_t depth );
@@ -29,6 +30,7 @@ private:
     uint32_t m_global_depth;
     const uint32_t m_bucket_size;
     std::vector< Bucket* > m_buckets;
+    size_t m_count;
 
 
 };
