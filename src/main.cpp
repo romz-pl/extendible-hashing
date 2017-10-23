@@ -25,6 +25,23 @@ int main()
 }
 
 //
+// Hashing function for STL unordered_map
+//
+namespace std
+{
+    template<> struct hash< Key >
+    {
+        typedef Key argument_type;
+        typedef std::size_t result_type;
+        result_type operator()( argument_type const& k ) const noexcept
+        {
+            return k.GetHash();
+        }
+    };
+}
+
+
+//
 //
 //
 void Check()
@@ -33,18 +50,18 @@ void Check()
 
     const int initial_global_depth = 2;
     const int bucket_size = 3;
-    Directory dir(initial_global_depth,bucket_size);
-    std::unordered_map< int, std::string > stlMap;
+    Directory dir( initial_global_depth, bucket_size );
+    std::unordered_map< Key, std::string > stlMap;
 
     const std::size_t eltNo = 1400;
-    std::vector< int > key;
+    std::vector< Key > key;
     key.reserve( eltNo );
     for( std::size_t i = 0; i < eltNo; i++ )
-        key.push_back( int( i ) );
+        key.push_back( Key( i ) );
 
      std::shuffle( key.begin(), key.end(), std::mt19937{ std::random_device{}() } );
 
-     for( const int& k : key )
+     for( Key k : key )
      {
          const std::string data = GetRandomString();
 
@@ -56,17 +73,33 @@ void Check()
 
      std::shuffle( key.begin(), key.end(), std::mt19937{ std::random_device{}() } );
 
-     for( int k : key )
+     for( Key k : key )
      {
          const std::string dataA = dir.search( k );
          const std::string dataB = stlMap.at( k );
 
          if( dataA != dataB )
          {
-             throw std::runtime_error( "Error" );
+             throw std::runtime_error( "Insert Error" );
          }
      }
+     if( dir.count() != stlMap.size() )
+     {
+         throw std::runtime_error( "Insert Error 2" );
+     }
 
+     std::shuffle( key.begin(), key.end(), std::mt19937{ std::random_device{}() } );
+
+     for( Key k : key )
+     {
+         dir.remove( k, 1 );
+         stlMap.erase( k );
+     }
+
+     if( dir.count() != stlMap.size() )
+     {
+         throw std::runtime_error( "Delete Error" );
+     }
 }
 
 
@@ -96,17 +129,5 @@ std::string GetRandomString()
 }
 
 
-/*
-namespace std
-{
-    template<> struct hash< Key >
-    {
-        typedef Key argument_type;
-        typedef std::size_t result_type;
-        result_type operator()( argument_type const& k ) const noexcept
-        {
-            return k.GetHash();
-        }
-    };
-}
-*/
+
+
