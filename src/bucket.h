@@ -5,21 +5,22 @@
 #include <string>
 #include <cstdint>
 #include "key.h"
+#include "data.h"
 
 class Bucket
 {
 public:
     Bucket( uint32_t depth, uint32_t size );
-    void insert( const Key& key, std::string value );
+    void insert( const Key& key, const Data& value );
     void remove( const Key& key );
-    void update( const Key& key, std::string value );
-    std::string search( const Key &key ) const;
+    void update( const Key& key, const Data& value );
+    Data search( const Key &key ) const;
     bool isFull() const;
     bool isEmpty() const;
     uint32_t getDepth() const;
     uint32_t increaseDepth();
     uint32_t decreaseDepth();
-    std::map< Key, std::string> copy() const;
+    std::map< Key, Data > copy() const;
     void clear();
     void display() const;
     bool hasKey( const Key& key ) const;
@@ -27,7 +28,7 @@ public:
 private:
     uint32_t m_depth;
     const uint32_t m_maxAllowedSize;
-    std::map< Key, std::string > m_values;
+    std::map< Key, Data > m_values;
 
 };
 

@@ -8,10 +8,10 @@ class Directory
 {
 public:
     Directory( uint32_t depth, uint32_t bucket_size );
-    void insert( const Key& key, std::string value, bool reinserted );
+    void insert( const Key& key, const Data& value, bool reinserted );
     void remove( const Key &key, int mode );
-    void update( const Key& key, std::string value );
-    std::string search( const Key &key ) const;
+    void update( const Key& key, const Data& value );
+    Data search( const Key &key ) const;
     void display( bool duplicates ) const;
     size_t count() const;
 

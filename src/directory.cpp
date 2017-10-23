@@ -64,7 +64,7 @@ void Directory::split( uint32_t bucket_no )
     const int32_t pair_index = pairIndex( bucket_no, local_depth );
     m_buckets[ pair_index ] = new Bucket( local_depth, m_bucket_size );
 
-    const std::map< Key, std::string > temp = m_buckets[ bucket_no ]->copy();
+    const auto temp = m_buckets[ bucket_no ]->copy();
     m_buckets[ bucket_no ]->clear();
     const int32_t index_diff = 1 << local_depth;
     const int32_t dir_size = 1 << m_global_depth;
@@ -121,7 +121,7 @@ std::string Directory::bucket_id( uint32_t n ) const
     return s;
 }
 
-void Directory::insert( const Key &key, std::string value, bool reinserted )
+void Directory::insert( const Key &key, const Data &value, bool reinserted )
 {
     const uint32_t bucket_no = hash( key );
 
@@ -171,20 +171,20 @@ void Directory::remove( const Key& key, int mode )
     }
 }
 
-void Directory::update( const Key &key, std::string value )
+void Directory::update( const Key &key, const Data &value )
 {
     const uint32_t bucket_no = hash( key );
     m_buckets[ bucket_no ]->update( key, value );
     std::cout << "Value updated" << std::endl;
 }
 
-std::string Directory::search( const Key& key ) const
+Data Directory::search( const Key& key ) const
 {
     const uint32_t bucket_no = hash( key );
     std::cout << "Searching key " << key.ToString() << " in bucket " << bucket_id( bucket_no ) << std::endl;
 
-    const std::string value = m_buckets[ bucket_no ]->search( key );
-    std::cout << "Value = " << value << std::endl;
+    const Data value = m_buckets[ bucket_no ]->search( key );
+    std::cout << "Value = " << value.ToString() << std::endl;
     return value;
 }
 

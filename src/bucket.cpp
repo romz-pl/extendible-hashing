@@ -14,7 +14,7 @@ Bucket::Bucket( uint32_t depth, uint32_t size )
     }
 }
 
-void Bucket::insert( const Key& key, std::string value )
+void Bucket::insert(const Key& key, const Data &value )
 {
     assert( m_values.find( key ) == m_values.end() );
     assert( !isFull() );
@@ -35,7 +35,7 @@ void Bucket::remove( const Key& key )
     m_values.erase( it );
 }
 
-void Bucket::update( const Key &key, std::string value )
+void Bucket::update(const Key &key, const Data &value )
 {
     const auto it = m_values.find( key );
     if( it == m_values.end() )
@@ -48,7 +48,7 @@ void Bucket::update( const Key &key, std::string value )
     m_values[ key ] = value;
 }
 
-std::string Bucket::search( const Key& key ) const
+Data Bucket::search( const Key& key ) const
 {
     const auto it = m_values.find( key );
     if( it == m_values.end() )
@@ -88,7 +88,7 @@ uint32_t Bucket::decreaseDepth()
     return m_depth;
 }
 
-std::map< Key, std::string > Bucket::copy() const
+std::map< Key, Data > Bucket::copy() const
 {
     return m_values;
 }
