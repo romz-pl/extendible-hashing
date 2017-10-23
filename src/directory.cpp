@@ -18,8 +18,9 @@ Directory::Directory( uint32_t depth, uint32_t bucket_size )
     }
 }
 
-uint32_t Directory::hash( uint32_t n ) const
+uint32_t Directory::hash( const Key& key ) const
 {
+    const size_t n = key.GetHash();
     return n & ( ( 1 << m_global_depth ) - 1 );
 }
 
@@ -63,7 +64,7 @@ void Directory::split( uint32_t bucket_no )
     const int32_t pair_index = pairIndex( bucket_no, local_depth );
     m_buckets[ pair_index ] = new Bucket( local_depth, m_bucket_size );
 
-    const std::map< uint32_t, std::string > temp = m_buckets[ bucket_no ]->copy();
+    const std::map< Key, std::string > temp = m_buckets[ bucket_no ]->copy();
     m_buckets[ bucket_no ]->clear();
     const int32_t index_diff = 1 << local_depth;
     const int32_t dir_size = 1 << m_global_depth;
@@ -120,7 +121,7 @@ std::string Directory::bucket_id( uint32_t n ) const
     return s;
 }
 
-void Directory::insert( uint32_t key, std::string value, bool reinserted )
+void Directory::insert( const Key &key, std::string value, bool reinserted )
 {
     const uint32_t bucket_no = hash( key );
 
@@ -128,7 +129,7 @@ void Directory::insert( uint32_t key, std::string value, bool reinserted )
     if( b->hasKey( key ) )
     {
         std::stringstream buffer;
-        buffer << "Key " << key << " already exists in bucket " << bucket_id( bucket_no );
+        buffer << "Key " << key.ToString() << " already exists in bucket " << bucket_id( bucket_no );
         throw std::runtime_error( buffer.str() );
     }
 
@@ -143,21 +144,21 @@ void Directory::insert( uint32_t key, std::string value, bool reinserted )
     if( !reinserted )
     {
         m_count++;
-        std::cout << "Inserted key " << key << " in bucket " << bucket_id( bucket_no ) << std::endl;
+        std::cout << "Inserted key " << key.ToString() << " in bucket " << bucket_id( bucket_no ) << std::endl;
     }
     else
     {
-        std::cout << "Moved key " << key << " to bucket " << bucket_id( bucket_no ) << std::endl;
+        std::cout << "Moved key " << key.ToString() << " to bucket " << bucket_id( bucket_no ) << std::endl;
     }
 
 }
 
-void Directory::remove( uint32_t key, int mode )
+void Directory::remove( const Key& key, int mode )
 {
     const uint32_t bucket_no = hash( key );
     m_buckets[ bucket_no ]->remove( key );
     m_count--;
-    std::cout << "Deleted key " << key << " from bucket " << bucket_id( bucket_no ) << std::endl;
+    std::cout << "Deleted key " << key.ToString() << " from bucket " << bucket_id( bucket_no ) << std::endl;
 
     if( mode > 0 )
     {
@@ -170,17 +171,17 @@ void Directory::remove( uint32_t key, int mode )
     }
 }
 
-void Directory::update( uint32_t key, std::string value )
+void Directory::update( const Key &key, std::string value )
 {
     const uint32_t bucket_no = hash( key );
     m_buckets[ bucket_no ]->update( key, value );
     std::cout << "Value updated" << std::endl;
 }
 
-std::string Directory::search( uint32_t key ) const
+std::string Directory::search( const Key& key ) const
 {
     const uint32_t bucket_no = hash( key );
-    std::cout << "Searching key " << key << " in bucket " << bucket_id( bucket_no ) << std::endl;
+    std::cout << "Searching key " << key.ToString() << " in bucket " << bucket_id( bucket_no ) << std::endl;
 
     const std::string value = m_buckets[ bucket_no ]->search( key );
     std::cout << "Value = " << value << std::endl;
