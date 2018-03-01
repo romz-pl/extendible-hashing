@@ -1,4 +1,6 @@
 build/*
-!build/Makefile
 
+
+3rdparty/googletest/gtest-all.o
+3rdparty/googletest/gtest.a
 
