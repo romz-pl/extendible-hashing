@@ -15,6 +15,7 @@ HashEx CreateHashEx()
     return hashEx;
 }
 
+
 //
 // Generate unique keys
 //
