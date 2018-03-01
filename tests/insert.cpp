@@ -64,16 +64,12 @@ std::string GetRandomString( std::size_t maxLength )
 }
 
 //
+// Insert keys
 //
-//
-TEST(hashex, insert)
+void Insert( std::map< Key, Data >& stlMap, HashEx& hashEx, const std::vector< Key >& key )
 {
     const std::size_t maxLength = 50;
-    std::map< Key, Data > stlMap;
-    HashEx hashEx = CreateHashEx();
-    std::vector< Key > key = GenerateKeys();
 
-    // Insert keys
     for( Key k : key )
     {
         const Data data = Data( GetRandomString( maxLength ) );
@@ -83,7 +79,13 @@ TEST(hashex, insert)
     }
 
     EXPECT_TRUE( hashEx.Count() == stlMap.size() );
+}
 
+//
+// Find keys
+//
+void Find( const std::map< Key, Data >& stlMap, const HashEx& hashEx, std::vector< Key >& key )
+{
     // Make key randomly distributed other then inserted
     std::shuffle( key.begin(), key.end(), std::mt19937{ std::random_device{}() } );
 
@@ -95,7 +97,13 @@ TEST(hashex, insert)
 
         EXPECT_TRUE( dataA == dataB );
     }
+}
 
+//
+// Delete keys
+//
+void Delete( std::map< Key, Data >& stlMap, HashEx& hashEx, std::vector< Key >& key )
+{
     // Make key randomly distributed other then inserted
     std::shuffle( key.begin(), key.end(), std::mt19937{ std::random_device{}() } );
 
@@ -108,5 +116,25 @@ TEST(hashex, insert)
 
     EXPECT_TRUE( hashEx.Count() == 0 );
     EXPECT_TRUE( hashEx.Count() == stlMap.size() );
+}
+
+
+//
+//
+//
+TEST(hashex, insert)
+{
+    
+    std::map< Key, Data > stlMap;
+    HashEx hashEx = CreateHashEx();
+    std::vector< Key > key = GenerateKeys();
+
+    Insert( stlMap, hashEx, key );
+
+    Find( stlMap, hashEx, key );
+    
+    Delete( stlMap, hashEx, key );
+
+
 }
 
