@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/romz-pl/extendible-hashing.svg?branch=master)](https://travis-ci.org/romz-pl/extendible-hashing)
 
+[![Coverage Status](https://coveralls.io/repos/github/romz-pl/extendible-hashing/badge.svg?branch=master)](https://coveralls.io/github/romz-pl/extendible-hashing?branch=master)
+
 # Memory based extendible hashing
 
 1. Implementation of extendible hashing in C++
