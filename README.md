@@ -24,3 +24,4 @@ Extendible hashing is a new access technique, in which the user is guaranteed no
 Workshop on Data Description, Access, and Control, pp. 186-206, 1971,
 
 7. P. Larson "Dynamic hashing", BIT vol. 18, pp. 184-201, 1978.
+
