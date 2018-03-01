@@ -21,6 +21,6 @@ make || exit 1
 #
 # Compile and run tests
 #
-cd ../build/tests || exit 1
-./all.x || exit 1
+#cd ../build/tests || exit 1
+#./all.x || exit 1
 
