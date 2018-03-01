@@ -1,16 +1,17 @@
 #!/bin/bash
 
+curr_dir=$( pwd )
 
 #
 # Compile google test library
 #
-cd 3rdparty/googletest || exit 1
+cd ${curr_dir}/3rdparty/googletest || exit 1
 make gtest.a || exit 1
 
 #
 # Compile romz-gdbm library, tests and examples
 #
-cd ../.. || exit 1
+cd ${curr_dir} || exit 1
 rm -rf build || exit 1
 mkdir build || exit 1
 cd build || exit 1
@@ -21,6 +22,6 @@ make || exit 1
 #
 # Compile and run tests
 #
-#cd ../build/tests || exit 1
-#./all.x || exit 1
+cd ${curr_dir}/build/tests || exit 1
+./tests.x || exit 1
 
