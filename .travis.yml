@@ -4,7 +4,7 @@ compiler:
 #  - clang
   - gcc
 
-script: ./install
+script: ./build-all.sh
 
 notifications:
    email: false

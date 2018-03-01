@@ -3,6 +3,9 @@ enable_language(CXX)
 
 project(extendible-hashing)
 
+enable_testing(true)
+
+add_subdirectory(3rdparty/googletest)
 add_subdirectory(src)
 add_subdirectory(tests)
 
