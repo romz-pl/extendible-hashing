@@ -1,33 +1,32 @@
 language: cpp
 
 compiler:
-#  - clang
   - gcc
 
+
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - lcov
+
+
 script: ./build-all.sh
+
+after_success:
+    # Creating report
+  - cd ${TRAVIS_BUILD_DIR}
+  - lcov --directory . --capture --output-file coverage.info # capture coverage info
+  - lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter out system
+  - lcov --remove coverage.info '*/3rdparty/googletest/*' --output-file coverage.info # filter out googletest library
+  - lcov --list coverage.info #debug info
+  # Uploading report to CodeCov
+  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+
 
 notifications:
    email: false
 
 
-# The default is:
-#     GCC 4.8.2 that supports C++11
-#     Clang 3.5.0 taht supports C++11
 
-#
-# It takes about 6 minutes to install the required packages on Travis Server.
-# 
-#
-# before_script:
-#    - export CXX=g++-7
-#
-#script: make
-#
-#addons:
-#    apt:
-#        sources:
-#            - ubuntu-toolchain-r-test
-#        packages:
-#            - g++-7
-
-  
