@@ -4,7 +4,7 @@
 //
 //
 //
-HashEx::HashEx( int depth, int bucket_size )
+HashEx::HashEx( uint32_t depth, uint32_t bucket_size )
     : m_dir( depth, bucket_size )
 {
 

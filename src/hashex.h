@@ -61,7 +61,7 @@
 class HashEx
 {
 public:
-    HashEx( int depth, int bucket_size );
+    HashEx( uint32_t depth, uint32_t bucket_size );
     ~HashEx() = default;
 
     Data Get( const Key& key ) const;
