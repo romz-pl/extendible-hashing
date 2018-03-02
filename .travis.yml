@@ -22,7 +22,7 @@ after_success:
 #  - lcov --remove coverage.info '*/3rdparty/googletest/*' --output-file coverage.info # filter out googletest library
 #  - lcov --list coverage.info #debug info
   # Uploading report to CodeCov
-#  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
 
 
 notifications:
