@@ -10,8 +10,10 @@ cd build || exit 1
 #
 # Run cmake
 #
-cmake -DBUILD_GTEST=ON -DBUILD_GMOCK=OFF   .. || exit 1
+cmake -DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -DCMAKE_BUILD_TYPE=Debug  .. || exit 1
 make || exit 1
+
+make -j8 extendible-hashing_coverage
 
 #
 # Run test
