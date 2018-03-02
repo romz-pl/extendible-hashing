@@ -9,5 +9,7 @@ hashex.cpp
 key.cpp
 )
 
-target_compile_options( hashex PRIVATE -Wall -Wextra -std=c++11 -DNDEBUG -DNOLOGGING )
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -g -O0 -fprofile-arcs -ftest-coverage")
+
+target_compile_options( hashex PRIVATE -Wall -pedantic -pthread -g -O0 -fprofile-arcs -ftest-coverage -std=c++11 -DNDEBUG -DNOLOGGING )
 
