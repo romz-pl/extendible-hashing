@@ -19,5 +19,8 @@ comment:
   require_head: yes
 
 ignore:
-  - "*/3rdparty/googletest/.*"
+  - "3rdparty/googletest/googletest/include/gtest/gtest.h"
+  - "3rdparty/googletest/googletest/include/gtest/gtest-message.h"
+  - "3rdparty/googletest/googletest/include/gtest/internal/gtest-internal.h"
+  - "3rdparty/googletest/googletest/include/gtest/internal/gtest-port.h"
 
