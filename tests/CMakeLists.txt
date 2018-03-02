@@ -3,6 +3,7 @@
 #project(hashex-tests)
 
 add_executable(tests
+construct.cpp
 insert.cpp
 main.cpp
 )

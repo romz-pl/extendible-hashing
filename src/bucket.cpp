@@ -8,12 +8,9 @@
 //
 Bucket::Bucket( uint32_t depth, uint32_t size )
     : m_depth( depth )
-    , m_maxAllowedSize( size )
+    , m_maxAllowedSize( std::max( size, 1U ) )
 {
-    if( size < 1 )
-    {
-        throw std::runtime_error( "The maximum allowed size of bucket must be at least one." );
-    }
+
 }
 
 //
