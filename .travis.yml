@@ -4,13 +4,13 @@ compiler:
   - gcc
 
 
-addons:
-    apt:
-        sources:
-            - ubuntu-toolchain-r-test
-        packages:
-            - lcov
-
+#addons:
+#    apt:
+#        sources:
+#            - ubuntu-toolchain-r-test
+#        packages:
+#            - lcov
+#
 
 script: ./build-all.sh
 
