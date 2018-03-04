@@ -28,13 +28,17 @@ std::vector< Key > GenerateKeys()
     std::vector< Key > key;
     key.reserve( eltNo );
     for( std::size_t i = 0; i < eltNo; i++ )
+    {
         key.push_back( Key( i ) );
+
+        EXPECT_TRUE( Key( i ) == Key( i ) );
+        EXPECT_TRUE( Key( i ) != Key( i + 1 ) );
+    }
 
     // Make key randomly distributed
     std::shuffle( key.begin(), key.end(), std::mt19937{ std::random_device{}() } );
 
     return key;
-
 }
 
 //
@@ -75,10 +79,15 @@ void Insert( std::map< Key, Data >& stlMap, HashEx& hashEx, const std::vector< K
         const Data data = Data( GetRandomString( maxLength ) );
         EXPECT_NO_THROW( hashEx.Put( k, data ) );
         // hashEx.Print( true );
-        stlMap.insert( std::make_pair( k, data ) );
+        EXPECT_TRUE( stlMap.insert( std::make_pair( k, data ) ).second );
     }
 
     EXPECT_TRUE( hashEx.Count() == stlMap.size() );
+
+    for( auto v : stlMap )
+    {
+        EXPECT_ANY_THROW( hashEx.Put( v.first, v.second ) );
+    }
 }
 
 //
@@ -96,6 +105,7 @@ void Find( const std::map< Key, Data >& stlMap, const HashEx& hashEx, std::vecto
         const Data dataB = stlMap.at( k );
 
         EXPECT_TRUE( dataA == dataB );
+        EXPECT_FALSE( dataA != dataB );
     }
 }
 
@@ -111,7 +121,9 @@ void Delete( std::map< Key, Data >& stlMap, HashEx& hashEx, std::vector< Key >& 
     for( Key k : key )
     {
         EXPECT_NO_THROW( hashEx.Delete( k ) );
-        stlMap.erase( k );
+        EXPECT_ANY_THROW( hashEx.Delete( k ) );
+        EXPECT_ANY_THROW( hashEx.Get( k ) );
+        EXPECT_TRUE( stlMap.erase( k ) == 1U );
     }
 
     EXPECT_TRUE( hashEx.Count() == 0 );
@@ -124,7 +136,6 @@ void Delete( std::map< Key, Data >& stlMap, HashEx& hashEx, std::vector< Key >& 
 //
 TEST(hashex, insert)
 {
-    
     std::map< Key, Data > stlMap;
     HashEx hashEx = CreateHashEx();
     std::vector< Key > key = GenerateKeys();
@@ -134,7 +145,5 @@ TEST(hashex, insert)
     Find( stlMap, hashEx, key );
     
     Delete( stlMap, hashEx, key );
-
-
 }
 
