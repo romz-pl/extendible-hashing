@@ -32,6 +32,12 @@ TEST(hashex, update)
         EXPECT_TRUE( data == Data( txt ) );
         
     }
+    
+    for( std::size_t i = 0; i < eltNo; i++ )
+    {
+        txt = "cc" + std::to_string( i );
+        EXPECT_ANY_THROW( hashEx.Update( Key( i + eltNo ), Data( txt ) ) );
+    }
 
 }
 
