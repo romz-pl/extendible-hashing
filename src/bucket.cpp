@@ -135,8 +135,12 @@ void Bucket::clear()
 //
 void Bucket::display() const
 {
+    std::string txt;
     for( const auto& v : m_values )
-        std::cout << v.first.ToString() << " ";
+    {
+        txt = "(" + v.first.ToString() + ";" + v.second.ToString() + ")";
+        std::cout << txt << " ";
+    }
 
     std::cout << std::endl;
 }
