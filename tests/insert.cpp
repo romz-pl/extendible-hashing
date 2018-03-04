@@ -79,6 +79,12 @@ void Insert( std::map< Key, Data >& stlMap, HashEx& hashEx, const std::vector< K
     }
 
     EXPECT_TRUE( hashEx.Count() == stlMap.size() );
+
+    for( auto v : stlMap )
+    {
+        EXPECT_ANY_THROW( hashEx.Put( v.first, v.second ) );
+    }
+
 }
 
 //
