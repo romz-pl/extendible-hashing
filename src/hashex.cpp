@@ -29,6 +29,14 @@ void HashEx::Put( const Key& key, const Data& data )
 //
 //
 //
+void HashEx::Update( const Key& key, const Data& data )
+{
+    m_dir.update( key, data );
+}
+
+//
+//
+//
 void HashEx::Delete( const Key& key )
 {
     m_dir.remove( key, 2 );
