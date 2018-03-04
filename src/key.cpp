@@ -35,16 +35,16 @@ uint32_t Key::Hash32( uint32_t x )
 //
 //
 //
-uint64_t Key::Hash64( uint64_t x )
-{
-    const uint64_t a = 0xbf58476d1ce4e5b9;
-    const uint64_t b = 0x94d049bb133111eb;
-
-    x = (x ^ (x >> 30)) * a;
-    x = (x ^ (x >> 27)) * b;
-    x = x ^ (x >> 31);
-    return x;
-}
+//uint64_t Key::Hash64( uint64_t x )
+//{
+//    const uint64_t a = 0xbf58476d1ce4e5b9;
+//    const uint64_t b = 0x94d049bb133111eb;
+//
+//    x = (x ^ (x >> 30)) * a;
+//    x = (x ^ (x >> 27)) * b;
+//    x = x ^ (x >> 31);
+//    return x;
+//}
 
 //
 //

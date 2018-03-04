@@ -29,7 +29,7 @@ public:
     std::string ToString() const;
 
 private:
-    static uint64_t Hash64( uint64_t x );
+//    static uint64_t Hash64( uint64_t x );
     static uint32_t Hash32( uint32_t x );
 
 private:
