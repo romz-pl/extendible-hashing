@@ -117,6 +117,7 @@ void Delete( std::map< Key, Data >& stlMap, HashEx& hashEx, std::vector< Key >& 
     for( Key k : key )
     {
         EXPECT_NO_THROW( hashEx.Delete( k ) );
+        EXPECT_ANY_THROW( hashEx.Delete( k ) );
         stlMap.erase( k );
     }
 
