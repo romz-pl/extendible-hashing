@@ -7,6 +7,7 @@ construct.cpp
 insert.cpp
 update.cpp
 main.cpp
+print.cpp
 )
 
 # target_compile_options( tests PRIVATE -Wall -Wextra -std=c++11 -DNDEBUG -fprofile-arcs -ftest-coverage )
