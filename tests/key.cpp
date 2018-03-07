@@ -23,11 +23,6 @@ TEST(key, Compare)
         EXPECT_TRUE( Key( v1 ) == Key( v1 ) );
         EXPECT_TRUE( Key( v2 ) == Key( v2 ) );
         
-        if( v1 == v2 )
-        {
-            EXPECT_TRUE( Key( v1 ) == Key( v2 ) );
-        }
-        
         if( v1 != v2 )
         {
             EXPECT_TRUE( Key( v1 ) != Key( v2 ) );
