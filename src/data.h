@@ -19,8 +19,18 @@ public:
     explicit Data( const std::string& v );
     ~Data() = default;
 
-    bool operator == ( const Data& v ) const;
-    bool operator != ( const Data& v ) const;
+    Data( const Data & ) = default;
+    Data& operator=( const Data & ) = default;
+
+    Data( Data && ) = default;
+    Data& operator=( Data && ) = default;
+
+    bool operator==( const Data& v ) const;
+    bool operator!=( const Data& v ) const;
+    bool operator< ( const Data& v ) const;
+    bool operator<=( const Data& v ) const;
+    bool operator> ( const Data& v ) const;
+    bool operator>=( const Data& v ) const; 
 
     std::string ToString() const;
 
