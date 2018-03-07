@@ -3,6 +3,7 @@
 #project(hashex-tests)
 
 add_executable(tests
+bucket.cpp
 construct.cpp
 data.cpp
 GetRandomString.cpp
