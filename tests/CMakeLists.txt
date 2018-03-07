@@ -4,6 +4,8 @@
 
 add_executable(tests
 construct.cpp
+data.cpp
+GetRandomString.cpp
 insert.cpp
 key.cpp
 update.cpp
