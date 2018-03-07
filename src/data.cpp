@@ -20,7 +20,7 @@ Data::Data( const std::string& v )
 //
 //
 //
-bool Data::operator == ( const Data& v ) const
+bool Data::operator==( const Data& v ) const
 {
     return m_data == v.m_data;
 }
@@ -28,10 +28,42 @@ bool Data::operator == ( const Data& v ) const
 //
 //
 //
-bool Data::operator != ( const Data& v ) const
+bool Data::operator<( const Data& v ) const
 {
-    return !( m_data == v.m_data );
+    return m_data < v.m_data;
 }
+
+//
+//
+//
+bool Data::operator!=( const Data& v ) const
+{
+    return !( *this == v );
+}
+
+//
+//
+//
+bool Data::operator<=( const Data& v ) const
+{
+   return !( v < *this );
+}
+
+//
+//
+//
+bool Data::operator>( const Data& v ) const
+{
+    return ( v < *this );
+}
+
+//
+//
+//
+bool Data::operator>=( const Data& v ) const
+{
+    return !( *this < v );
+} 
 
 //
 //
