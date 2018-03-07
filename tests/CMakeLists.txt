@@ -4,14 +4,14 @@
 
 add_executable(tests
 bucket.cpp
-#construct.cpp
+construct.cpp
 data.cpp
 GetRandomString.cpp
-#insert.cpp
+insert.cpp
 key.cpp
-#update.cpp
+update.cpp
 main.cpp
-#print.cpp
+print.cpp
 )
 
 # target_compile_options( tests PRIVATE -Wall -Wextra -std=c++11 -DNDEBUG -fprofile-arcs -ftest-coverage )
