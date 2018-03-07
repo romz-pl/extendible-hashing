@@ -58,7 +58,7 @@ void Bucket::update( const Key &key, const Data &value )
     if( it == m_values.end() )
     {
         std::stringstream buffer;
-        buffer << "Cannot update. Key '" << key.ToString() << "' does not exists.";
+        buffer << "Cannot update. Key '" << key.ToString() << "' does not exist.";
         throw std::runtime_error( buffer.str() );
     }
 
