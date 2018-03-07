@@ -22,8 +22,8 @@ public:
     Key( const Key & ) = default;
     Key& operator=( const Key & ) = default;
 
-    Key( const Key && ) = default;
-    Key& operator=( const Key && ) = default;
+    Key( Key && ) = default;
+    Key& operator=( Key && ) = default;
 
     uint32_t GetHash() const;
 
