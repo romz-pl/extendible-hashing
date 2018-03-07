@@ -200,4 +200,23 @@ TEST(bucket, hasKey)
     }
 }
 
+//
+//
+//
+TEST(bucket, display)
+{
+    const uint32_t depth = 2;
+    const uint32_t maxAllowedSize = 10;
+
+    Bucket bucket( depth, maxAllowedSize );
+    
+    const std::vector< Key > key{ Key( 1 ), Key( 2 ), Key( 3 ) };
+    
+    for( auto k : key )
+    {
+        EXPECT_NO_THROW( bucket.insert( k, Data( "a" + k.ToString() ) ) );
+    }
+    
+    bucket.display();
+}
 
