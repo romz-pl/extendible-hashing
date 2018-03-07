@@ -5,6 +5,7 @@
 add_executable(tests
 construct.cpp
 insert.cpp
+key.cpp
 update.cpp
 main.cpp
 print.cpp
