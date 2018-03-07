@@ -19,12 +19,18 @@ public:
     explicit Key( uint32_t value );
     ~Key() = default;
 
-    std::size_t GetHash() const;
+    Key( const Key & ) = default;
+    Key& operator=( const Key & ) = default;
+
+    uint32_t GetHash() const;
 
     bool operator==( const Key& key ) const;
     bool operator!=( const Key& key ) const;
 
-    bool operator<( const Key& key ) const;
+    bool operator< ( const Key& key ) const;
+    bool operator<=( const Key& key ) const;
+    bool operator> ( const Key& key ) const;
+    bool operator>=( const Key& key ) const; 
 
     std::string ToString() const;
 

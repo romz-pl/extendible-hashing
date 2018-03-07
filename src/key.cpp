@@ -13,7 +13,7 @@ Key::Key( uint32_t value )
 //
 //
 //
-std::size_t Key::GetHash() const
+uint32_t Key::GetHash() const
 {
     // return Hash64( m_value );
     return Hash32( m_value );
@@ -57,19 +57,42 @@ bool Key::operator==( const Key& key ) const
 //
 //
 //
-bool Key::operator!=( const Key& key ) const
-{
-    return !( m_value == key.m_value );
-}
-
-
-//
-//
-//
 bool Key::operator<( const Key& key ) const
 {
     return m_value < key.m_value;
 }
+
+//
+//
+//
+bool Key::operator!=( const Key& key ) const
+{
+    return !( *this == key );
+}
+
+//
+//
+//
+bool Key::operator<=( const Key& key ) const
+{
+   return !( key < *this );
+}
+
+//
+//
+//
+bool Key::operator>( const Key& key ) const
+{
+    return ( key < *this );
+}
+
+//
+//
+//
+bool Key::operator>=( const Key& key ) const
+{
+    return !( *this < key );
+} 
 
 //
 //
