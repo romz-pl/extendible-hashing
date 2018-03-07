@@ -10,7 +10,16 @@
 class Bucket
 {
 public:
-    Bucket( uint32_t depth, uint32_t size );
+    Bucket( uint32_t depth, uint32_t maxAllowedSize );
+    ~Bucket() = default;
+
+    Bucket( const Bucket & ) = default;
+    Bucket& operator=( const Bucket & ) = default;
+
+    Bucket( Bucket && ) = default;
+    Bucket& operator=( Bucket && ) = default;
+
+
     void insert( const Key& key, const Data& value );
     void remove( const Key& key );
     void update( const Key& key, const Data& value );

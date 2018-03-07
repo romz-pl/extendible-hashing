@@ -6,9 +6,9 @@
 //
 //
 //
-Bucket::Bucket( uint32_t depth, uint32_t size )
+Bucket::Bucket( uint32_t depth, uint32_t maxAllowedSize )
     : m_depth( depth )
-    , m_maxAllowedSize( std::max( size, 1U ) )
+    , m_maxAllowedSize( std::max( maxAllowedSize, 1U ) )
 {
 
 }
@@ -16,10 +16,19 @@ Bucket::Bucket( uint32_t depth, uint32_t size )
 //
 //
 //
-void Bucket::insert(const Key& key, const Data &value )
+void Bucket::insert( const Key& key, const Data &value )
 {
-    assert( m_values.find( key ) == m_values.end() );
-    assert( !isFull() );
+    if( m_values.find( key ) != m_values.end() )
+    {
+        std::stringstream buffer;
+        buffer << "Cannot insert. Key '" << key.ToString() << "' already exists.";
+        throw std::runtime_error( buffer.str() );    
+    }
+
+    if( isFull() )
+    {
+        throw std::runtime_error( "Cannot insert key into the bucket. The bucket is full." );
+    }
 
     m_values[ key ] = value;
 }
@@ -43,7 +52,7 @@ void Bucket::remove( const Key& key )
 //
 //
 //
-void Bucket::update(const Key &key, const Data &value )
+void Bucket::update( const Key &key, const Data &value )
 {
     const auto it = m_values.find( key );
     if( it == m_values.end() )
@@ -110,6 +119,10 @@ uint32_t Bucket::increaseDepth()
 //
 uint32_t Bucket::decreaseDepth()
 {
+    if( m_depth == 0 )
+    {
+        throw std::runtime_error( "Cannot decrease the bucket's depth. The depth is zero." );
+    }
     m_depth--;
     return m_depth;
 }
