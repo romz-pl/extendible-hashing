@@ -38,15 +38,18 @@ Directory::~Directory()
     const size_t ss = m_bucket.size();
     for( size_t i = 0; i < ss; i++ )
     {
-        assert( m_bucket[ i ] );
+        Bucket *b =  m_bucket[ i ];
+        if( !b )
+            continue;
+
         for( size_t k = i + 1; k < ss; k++ )
         {
-            if( m_bucket[ i ] == m_bucket[ k ] )
+            if( b == m_bucket[ k ] )
             {
                 m_bucket[ k ] = nullptr;
             }
         }
-        delete m_bucket[ i ];
+        delete b;
         m_bucket[ i ] = nullptr;
     }
 }
@@ -67,9 +70,10 @@ uint32_t Directory::get_index( const Key& key ) const
 //
 //
 //
-uint32_t Directory::pairIndex( uint32_t idx, uint32_t depth )
+uint32_t Directory::get_pair_index( uint32_t idx, uint32_t depth )
 {
-    return idx ^ ( 1 << ( depth - 1 ) );
+    assert( depth > 0 );
+    return idx ^ ( 1U << ( depth - 1U ) );
 }
 
 //
@@ -113,7 +117,7 @@ void Directory::split( uint32_t idx )
     if( local_depth > m_global_depth )
         grow();
 
-    const int32_t pair_index = pairIndex( idx, local_depth );
+    const int32_t pair_index = get_pair_index( idx, local_depth );
     m_bucket[ pair_index ] = new Bucket( local_depth, m_max_bucket_size );
 
     const auto temp = m_bucket[ idx ]->copy();
@@ -137,7 +141,7 @@ void Directory::split( uint32_t idx )
 void Directory::merge( uint32_t idx )
 {
     const uint32_t local_depth = m_bucket[ idx ]->getDepth();
-    const int32_t pair_index = pairIndex( idx, local_depth );
+    const int32_t pair_index = get_pair_index( idx, local_depth );
     const int32_t index_diff = 1 << local_depth;
     const int32_t dir_size = 1 << m_global_depth;
 
