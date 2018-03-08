@@ -25,13 +25,13 @@ public:
     size_t count() const;
 
 private:
-    static uint32_t pairIndex( uint32_t bucket_no, uint32_t depth );
+    static uint32_t pairIndex( uint32_t idx, uint32_t depth );
 
     uint32_t get_index( const Key &key ) const;
     void grow();
     void shrink();
-    void split( uint32_t bucket_no );
-    void merge( uint32_t bucket_no );
+    void split( uint32_t idx );
+    void merge( uint32_t idx );
     std::string bucket_id( uint32_t n ) const;
 
 

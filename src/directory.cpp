@@ -67,9 +67,9 @@ uint32_t Directory::get_index( const Key& key ) const
 //
 //
 //
-uint32_t Directory::pairIndex( uint32_t bucket_no, uint32_t depth )
+uint32_t Directory::pairIndex( uint32_t idx, uint32_t depth )
 {
-    return bucket_no ^ ( 1 << ( depth - 1 ) );
+    return idx ^ ( 1 << ( depth - 1 ) );
 }
 
 //
@@ -107,17 +107,17 @@ void Directory::shrink()
 //
 //
 //
-void Directory::split( uint32_t bucket_no )
+void Directory::split( uint32_t idx )
 {
-    const uint32_t local_depth = m_bucket[ bucket_no ]->increaseDepth();
+    const uint32_t local_depth = m_bucket[ idx ]->increaseDepth();
     if( local_depth > m_global_depth )
         grow();
 
-    const int32_t pair_index = pairIndex( bucket_no, local_depth );
+    const int32_t pair_index = pairIndex( idx, local_depth );
     m_bucket[ pair_index ] = new Bucket( local_depth, m_max_bucket_size );
 
-    const auto temp = m_bucket[ bucket_no ]->copy();
-    m_bucket[ bucket_no ]->clear();
+    const auto temp = m_bucket[ idx ]->copy();
+    m_bucket[ idx ]->clear();
     const int32_t index_diff = 1 << local_depth;
     const int32_t dir_size = 1 << m_global_depth;
 
@@ -134,23 +134,23 @@ void Directory::split( uint32_t bucket_no )
 //
 //
 //
-void Directory::merge( uint32_t bucket_no )
+void Directory::merge( uint32_t idx )
 {
-    const uint32_t local_depth = m_bucket[ bucket_no ]->getDepth();
-    const int32_t pair_index = pairIndex( bucket_no, local_depth );
+    const uint32_t local_depth = m_bucket[ idx ]->getDepth();
+    const int32_t pair_index = pairIndex( idx, local_depth );
     const int32_t index_diff = 1 << local_depth;
     const int32_t dir_size = 1 << m_global_depth;
 
     if( m_bucket[ pair_index ]->getDepth() == local_depth )
     {
         m_bucket[ pair_index ]->decreaseDepth();
-        delete( m_bucket[ bucket_no ] );
-        m_bucket[ bucket_no ] = m_bucket[ pair_index ];
+        delete( m_bucket[ idx ] );
+        m_bucket[ idx ] = m_bucket[ pair_index ];
 
-        for( int32_t i = bucket_no - index_diff ; i >= 0 ; i -= index_diff )
+        for( int32_t i = idx - index_diff ; i >= 0 ; i -= index_diff )
             m_bucket[ i ] = m_bucket[ pair_index ];
 
-        for( int32_t i = bucket_no + index_diff ; i < dir_size ; i += index_diff )
+        for( int32_t i = idx + index_diff ; i < dir_size ; i += index_diff )
             m_bucket[ i ] = m_bucket[ pair_index ];
     }
 }
