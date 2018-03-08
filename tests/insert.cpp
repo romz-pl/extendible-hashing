@@ -5,16 +5,6 @@
 #include <algorithm>
 #include "GetRandomString.h"
 
-//
-//
-//
-HashEx CreateHashEx()
-{
-    const int initial_global_depth = 2;
-    const int bucket_size = 3;
-    HashEx hashEx( initial_global_depth, bucket_size );
-    return hashEx;
-}
 
 
 //
@@ -114,7 +104,11 @@ void Delete( std::map< Key, Data >& stlMap, HashEx& hashEx, std::vector< Key >& 
 TEST(hashex, insert)
 {
     std::map< Key, Data > stlMap;
-    HashEx hashEx = CreateHashEx();
+
+    const uint32_t initial_global_depth = 2;
+    const uint32_t bucket_size = 3;
+    HashEx hashEx( initial_global_depth, bucket_size );
+
     std::vector< Key > key = GenerateKeys();
 
     Insert( stlMap, hashEx, key );
