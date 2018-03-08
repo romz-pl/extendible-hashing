@@ -52,12 +52,15 @@ Directory::~Directory()
 }
 
 //
+// Extracts least significant m_global_depth bits from key's hash
 //
-//
-uint32_t Directory::hash( const Key& key ) const
+uint32_t Directory::get_index( const Key& key ) const
 {
-    const size_t n = key.GetHash();
-    return n & ( ( 1 << m_global_depth ) - 1 );
+    const uint32_t n = key.GetHash();
+    // const uint32_t ss = ( 1U << m_global_depth );
+    // const uint32_t v = n & ( ss - 1 );
+    const uint32_t v = n & ~( (~0) << m_global_depth );
+    return v;
 }
 
 //
@@ -180,7 +183,7 @@ std::string Directory::bucket_id( uint32_t n ) const
 //
 void Directory::insert( const Key &key, const Data &value, bool reinserted )
 {
-    const uint32_t bucket_no = hash( key );
+    const uint32_t bucket_no = get_index( key );
 
     Bucket* b = m_bucket[ bucket_no ];
     if( b->hasKey( key ) )
@@ -215,7 +218,7 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
 //
 void Directory::remove( const Key& key, int mode )
 {
-    const uint32_t bucket_no = hash( key );
+    const uint32_t bucket_no = get_index( key );
     m_bucket[ bucket_no ]->remove( key );
     m_count--;
 
@@ -237,7 +240,7 @@ void Directory::remove( const Key& key, int mode )
 //
 void Directory::update( const Key &key, const Data &value )
 {
-    const uint32_t bucket_no = hash( key );
+    const uint32_t bucket_no = get_index( key );
     m_bucket[ bucket_no ]->update( key, value );
 
     LOGGER( std::cout << "Value updated" << std::endl; )
@@ -248,7 +251,7 @@ void Directory::update( const Key &key, const Data &value )
 //
 Data Directory::search( const Key& key ) const
 {
-    const uint32_t bucket_no = hash( key );
+    const uint32_t bucket_no = get_index( key );
 
     LOGGER( std::cout << "Searching key " << key.ToString() << " in bucket " << bucket_id( bucket_no ) << std::endl; )
 

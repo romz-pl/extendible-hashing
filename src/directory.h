@@ -27,7 +27,7 @@ public:
 private:
     static uint32_t pairIndex( uint32_t bucket_no, uint32_t depth );
 
-    uint32_t hash( const Key &key ) const;
+    uint32_t get_index( const Key &key ) const;
     void grow();
     void shrink();
     void split( uint32_t bucket_no );
