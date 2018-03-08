@@ -23,10 +23,10 @@ Directory::Directory( uint32_t depth, uint32_t max_bucket_size )
     , m_count( 0 )
 {
     const uint32_t ss = ( 1U << m_global_depth );
-    m_buckets.reserve( ss );
+    m_bucket.reserve( ss );
     for( size_t i = 0 ; i < ss ; i++ )
     {
-        m_buckets.push_back( new Bucket( depth, max_bucket_size ) );
+        m_bucket.push_back( new Bucket( depth, max_bucket_size ) );
     }
 }
 
@@ -35,19 +35,19 @@ Directory::Directory( uint32_t depth, uint32_t max_bucket_size )
 //
 Directory::~Directory()
 {
-    const size_t ss = m_buckets.size();
+    const size_t ss = m_bucket.size();
     for( size_t i = 0; i < ss; i++ )
     {
-        assert( m_buckets[ i ] );
+        assert( m_bucket[ i ] );
         for( size_t k = i + 1; k < ss; k++ )
         {
-            if( m_buckets[ i ] == m_buckets[ k ] )
+            if( m_bucket[ i ] == m_bucket[ k ] )
             {
-                m_buckets[ k ] = nullptr;
+                m_bucket[ k ] = nullptr;
             }
         }
-        delete m_buckets[ i ];
-        m_buckets[ i ] = nullptr;
+        delete m_bucket[ i ];
+        m_bucket[ i ] = nullptr;
     }
 }
 
@@ -73,12 +73,12 @@ uint32_t Directory::pairIndex( uint32_t bucket_no, uint32_t depth )
 //
 void Directory::grow()
 {
-    const size_t ss = m_buckets.size();
+    const size_t ss = m_bucket.size();
     assert( ss == ( 1U << m_global_depth ) );
 
-    m_buckets.reserve( 2 * ss );
+    m_bucket.reserve( 2 * ss );
     for( size_t i = 0 ; i < ss ; i++ )
-        m_buckets.push_back( m_buckets[ i ] );
+        m_bucket.push_back( m_bucket[ i ] );
 
     m_global_depth++;
 }
@@ -88,16 +88,16 @@ void Directory::grow()
 //
 void Directory::shrink()
 {
-    for( size_t i = 0 ; i < m_buckets.size() ; i++ )
+    for( size_t i = 0 ; i < m_bucket.size() ; i++ )
     {
-        if( m_buckets[ i ]->getDepth() == m_global_depth )
+        if( m_bucket[ i ]->getDepth() == m_global_depth )
         {
             return;
         }
     }
     m_global_depth--;
     for( uint32_t i = 0 ; i < 1U << m_global_depth; i++ )
-        m_buckets.pop_back();
+        m_bucket.pop_back();
 }
 
 //
@@ -105,23 +105,23 @@ void Directory::shrink()
 //
 void Directory::split( uint32_t bucket_no )
 {
-    const uint32_t local_depth = m_buckets[ bucket_no ]->increaseDepth();
+    const uint32_t local_depth = m_bucket[ bucket_no ]->increaseDepth();
     if( local_depth > m_global_depth )
         grow();
 
     const int32_t pair_index = pairIndex( bucket_no, local_depth );
-    m_buckets[ pair_index ] = new Bucket( local_depth, m_max_bucket_size );
+    m_bucket[ pair_index ] = new Bucket( local_depth, m_max_bucket_size );
 
-    const auto temp = m_buckets[ bucket_no ]->copy();
-    m_buckets[ bucket_no ]->clear();
+    const auto temp = m_bucket[ bucket_no ]->copy();
+    m_bucket[ bucket_no ]->clear();
     const int32_t index_diff = 1 << local_depth;
     const int32_t dir_size = 1 << m_global_depth;
 
     for( int32_t i = pair_index - index_diff ; i >= 0 ; i -= index_diff )
-        m_buckets[ i ] = m_buckets[pair_index];
+        m_bucket[ i ] = m_bucket[pair_index];
 
     for( int32_t i = pair_index + index_diff ; i < dir_size ; i += index_diff )
-        m_buckets[ i ] = m_buckets[ pair_index ];
+        m_bucket[ i ] = m_bucket[ pair_index ];
 
     for( const auto v : temp )
         insert( v.first, v.second, 1 );
@@ -132,22 +132,22 @@ void Directory::split( uint32_t bucket_no )
 //
 void Directory::merge( uint32_t bucket_no )
 {
-    const uint32_t local_depth = m_buckets[ bucket_no ]->getDepth();
+    const uint32_t local_depth = m_bucket[ bucket_no ]->getDepth();
     const int32_t pair_index = pairIndex( bucket_no, local_depth );
     const int32_t index_diff = 1 << local_depth;
     const int32_t dir_size = 1 << m_global_depth;
 
-    if( m_buckets[ pair_index ]->getDepth() == local_depth )
+    if( m_bucket[ pair_index ]->getDepth() == local_depth )
     {
-        m_buckets[ pair_index ]->decreaseDepth();
-        delete( m_buckets[ bucket_no ] );
-        m_buckets[ bucket_no ] = m_buckets[ pair_index ];
+        m_bucket[ pair_index ]->decreaseDepth();
+        delete( m_bucket[ bucket_no ] );
+        m_bucket[ bucket_no ] = m_bucket[ pair_index ];
 
         for( int32_t i = bucket_no - index_diff ; i >= 0 ; i -= index_diff )
-            m_buckets[ i ] = m_buckets[ pair_index ];
+            m_bucket[ i ] = m_bucket[ pair_index ];
 
         for( int32_t i = bucket_no + index_diff ; i < dir_size ; i += index_diff )
-            m_buckets[ i ] = m_buckets[ pair_index ];
+            m_bucket[ i ] = m_bucket[ pair_index ];
     }
 }
 
@@ -157,7 +157,7 @@ void Directory::merge( uint32_t bucket_no )
 std::string Directory::bucket_id( uint32_t n ) const
 {
     std::string s;
-    uint32_t d = m_buckets[ n ]->getDepth();
+    uint32_t d = m_bucket[ n ]->getDepth();
 
     while( n > 0 && d > 0 )
     {
@@ -182,7 +182,7 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
 {
     const uint32_t bucket_no = hash( key );
 
-    Bucket* b = m_buckets[ bucket_no ];
+    Bucket* b = m_bucket[ bucket_no ];
     if( b->hasKey( key ) )
     {
         std::stringstream buffer;
@@ -216,14 +216,14 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
 void Directory::remove( const Key& key, int mode )
 {
     const uint32_t bucket_no = hash( key );
-    m_buckets[ bucket_no ]->remove( key );
+    m_bucket[ bucket_no ]->remove( key );
     m_count--;
 
     LOGGER( std::cout << "Deleted key " << key.ToString() << " from bucket " << bucket_id( bucket_no ) << std::endl; )
 
     if( mode > 0 )
     {
-        if( m_buckets[ bucket_no ]->isEmpty() && m_buckets[ bucket_no ]->getDepth() > 1 )
+        if( m_bucket[ bucket_no ]->isEmpty() && m_bucket[ bucket_no ]->getDepth() > 1 )
             merge( bucket_no );
     }
     if( mode > 1 )
@@ -238,7 +238,7 @@ void Directory::remove( const Key& key, int mode )
 void Directory::update( const Key &key, const Data &value )
 {
     const uint32_t bucket_no = hash( key );
-    m_buckets[ bucket_no ]->update( key, value );
+    m_bucket[ bucket_no ]->update( key, value );
 
     LOGGER( std::cout << "Value updated" << std::endl; )
 }
@@ -252,7 +252,7 @@ Data Directory::search( const Key& key ) const
 
     LOGGER( std::cout << "Searching key " << key.ToString() << " in bucket " << bucket_id( bucket_no ) << std::endl; )
 
-    const Data value = m_buckets[ bucket_no ]->search( key );
+    const Data value = m_bucket[ bucket_no ]->search( key );
     LOGGER( std::cout << "Value = " << value.ToString() << std::endl; )
 
     return value;
@@ -266,9 +266,9 @@ void Directory::display( bool duplicates ) const
     std::set< std::string>  shown;
     std::cout << "Global depth : " << m_global_depth << std::endl;
 
-    for( std::size_t i = 0; i < m_buckets.size(); i++ )
+    for( std::size_t i = 0; i < m_bucket.size(); i++ )
     {
-        const uint32_t d = m_buckets[ i ]->getDepth();
+        const uint32_t d = m_bucket[ i ]->getDepth();
         const std::string s = bucket_id( i );
         if( duplicates || shown.find( s ) == shown.end() )
         {
@@ -276,7 +276,7 @@ void Directory::display( bool duplicates ) const
             for( uint32_t j = d; j <= m_global_depth; j++ )
                 std::cout << " ";
             std::cout << s << " => ";
-            m_buckets[ i ]->display();
+            m_bucket[ i ]->display();
         }
     }
 }

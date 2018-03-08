@@ -38,7 +38,7 @@ private:
 private:
     uint32_t m_global_depth;
     const uint32_t m_max_bucket_size;
-    std::vector< Bucket* > m_buckets;
+    std::vector< Bucket* > m_bucket;
     size_t m_count;
 
 
