@@ -15,7 +15,7 @@ print.cpp
 )
 
 # target_compile_options( tests PRIVATE -Wall -Wextra -std=c++11 -DNDEBUG -fprofile-arcs -ftest-coverage )
-target_compile_options( tests PRIVATE -Wall -pedantic -pthread -g -O0 -fprofile-arcs -ftest-coverage -std=c++11 -DNDEBUG )
+target_compile_options( tests PRIVATE -Wall -pedantic -pthread -g -O0 -fprofile-arcs -ftest-coverage -std=c++11  )
 
 target_include_directories( tests PUBLIC ${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR} )
 
