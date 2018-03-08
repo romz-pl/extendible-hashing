@@ -7,7 +7,16 @@
 class Directory
 {
 public:
-    Directory( uint32_t depth, uint32_t bucket_size );
+    Directory( uint32_t depth, uint32_t max_bucket_size );
+    ~Directory();
+
+    Directory( const Directory & ) = delete;
+    Directory& operator=( const Directory & ) = delete;
+
+    Directory( Directory && ) = delete;
+    Directory& operator=( Directory && ) = delete;
+
+
     void insert( const Key& key, const Data& value, bool reinserted );
     void remove( const Key &key, int mode );
     void update( const Key& key, const Data& value );
@@ -28,7 +37,7 @@ private:
 
 private:
     uint32_t m_global_depth;
-    const uint32_t m_bucket_size;
+    const uint32_t m_max_bucket_size;
     std::vector< Bucket* > m_buckets;
     size_t m_count;
 

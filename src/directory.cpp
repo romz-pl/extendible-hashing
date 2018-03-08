@@ -17,16 +17,37 @@
 //
 //
 //
-Directory::Directory( uint32_t depth, uint32_t bucket_size )
+Directory::Directory( uint32_t depth, uint32_t max_bucket_size )
     : m_global_depth( depth)
-    , m_bucket_size( bucket_size )
+    , m_max_bucket_size( max_bucket_size )
     , m_count( 0 )
 {
     const uint32_t ss = ( 1U << m_global_depth );
     m_buckets.reserve( ss );
     for( size_t i = 0 ; i < ss ; i++ )
     {
-        m_buckets.push_back( new Bucket( depth, bucket_size ) );
+        m_buckets.push_back( new Bucket( depth, max_bucket_size ) );
+    }
+}
+
+//
+//
+//
+Directory::~Directory()
+{
+    const size_t ss = m_buckets.size();
+    for( size_t i = 0; i < ss; i++ )
+    {
+        assert( m_buckets[ i ] );
+        for( size_t k = i + 1; k < ss; k++ )
+        {
+            if( m_buckets[ i ] == m_buckets[ k ] )
+            {
+                m_buckets[ k ] = nullptr;
+            }
+        }
+        delete m_buckets[ i ];
+        m_buckets[ i ] = nullptr;
     }
 }
 
@@ -89,7 +110,7 @@ void Directory::split( uint32_t bucket_no )
         grow();
 
     const int32_t pair_index = pairIndex( bucket_no, local_depth );
-    m_buckets[ pair_index ] = new Bucket( local_depth, m_bucket_size );
+    m_buckets[ pair_index ] = new Bucket( local_depth, m_max_bucket_size );
 
     const auto temp = m_buckets[ bucket_no ]->copy();
     m_buckets[ bucket_no ]->clear();
