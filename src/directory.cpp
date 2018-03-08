@@ -22,7 +22,7 @@ Directory::Directory( uint32_t depth, uint32_t max_bucket_size )
     , m_max_bucket_size( max_bucket_size )
     , m_count( 0 )
 {
-    const uint32_t ss = ( 1U << m_global_depth );
+    const uint32_t ss = 1U << m_global_depth;
     m_bucket.reserve( ss );
     for( size_t i = 0 ; i < ss ; i++ )
     {
@@ -68,12 +68,15 @@ uint32_t Directory::get_index( const Key& key ) const
 }
 
 //
-//
+// Flips "depth-1" bit in "idx".
+// Return the resulting value.
 //
 uint32_t Directory::get_pair_index( uint32_t idx, uint32_t depth )
 {
     assert( depth > 0 );
-    return idx ^ ( 1U << ( depth - 1U ) );
+    const uint32_t ss = 1U << ( depth - 1U );
+    const uint32_t v = idx ^ ss; 
+    return v;
 }
 
 //
@@ -82,7 +85,7 @@ uint32_t Directory::get_pair_index( uint32_t idx, uint32_t depth )
 void Directory::grow()
 {
     const size_t ss = m_bucket.size();
-    assert( ss == ( 1U << m_global_depth ) );
+    assert( ss == 1U << m_global_depth );
 
     m_bucket.reserve( 2 * ss );
     for( size_t i = 0 ; i < ss ; i++ )
@@ -104,7 +107,8 @@ void Directory::shrink()
         }
     }
     m_global_depth--;
-    for( uint32_t i = 0 ; i < 1U << m_global_depth; i++ )
+    const uint32_t ss = 1U << m_global_depth;
+    for( uint32_t i = 0 ; i < ss; i++ )
         m_bucket.pop_back();
 }
 
