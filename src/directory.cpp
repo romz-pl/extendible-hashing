@@ -136,7 +136,7 @@ void Directory::split( uint32_t idx )
         m_bucket[ i ] = m_bucket[ pair_index ];
 
     for( const auto v : temp )
-        insert( v.first, v.second, 1 );
+        insert( v.first, v.second, true );
 }
 
 //
