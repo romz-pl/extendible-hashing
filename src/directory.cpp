@@ -52,7 +52,8 @@ Directory::~Directory()
 }
 
 //
-// Extracts least significant m_global_depth bits from key's hash
+// Extracts least significant m_global_depth bits from key's hash.
+// Returns index of the bucket for given "key".
 //
 uint32_t Directory::get_index( const Key& key ) const
 {
@@ -183,19 +184,19 @@ std::string Directory::bucket_id( uint32_t n ) const
 //
 void Directory::insert( const Key &key, const Data &value, bool reinserted )
 {
-    const uint32_t bucket_no = get_index( key );
+    const uint32_t idx = get_index( key );
 
-    Bucket* b = m_bucket[ bucket_no ];
+    Bucket* b = m_bucket[ idx ];
     if( b->hasKey( key ) )
     {
         std::stringstream buffer;
-        buffer << "Key " << key.ToString() << " already exists in bucket " << bucket_id( bucket_no );
+        buffer << "Key " << key.ToString() << " already exists in bucket " << bucket_id( idx );
         throw std::runtime_error( buffer.str() );
     }
 
     if( b->isFull() )
     {
-        split( bucket_no );
+        split( idx );
         insert( key, value, reinserted );
         return;
     }
@@ -204,11 +205,11 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
     if( !reinserted )
     {
         m_count++;
-        LOGGER( std::cout << "Inserted key " << key.ToString() << " in bucket " << bucket_id( bucket_no ) << std::endl; )
+        LOGGER( std::cout << "Inserted key " << key.ToString() << " in bucket " << bucket_id( idx ) << std::endl; )
     }
     else
     {
-        LOGGER( std::cout << "Moved key " << key.ToString() << " to bucket " << bucket_id( bucket_no ) << std::endl; )
+        LOGGER( std::cout << "Moved key " << key.ToString() << " to bucket " << bucket_id( idx ) << std::endl; )
     }
 
 }
@@ -218,16 +219,16 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
 //
 void Directory::remove( const Key& key, int mode )
 {
-    const uint32_t bucket_no = get_index( key );
-    m_bucket[ bucket_no ]->remove( key );
+    const uint32_t idx = get_index( key );
+    m_bucket[ idx ]->remove( key );
     m_count--;
 
-    LOGGER( std::cout << "Deleted key " << key.ToString() << " from bucket " << bucket_id( bucket_no ) << std::endl; )
+    LOGGER( std::cout << "Deleted key " << key.ToString() << " from bucket " << bucket_id( idx ) << std::endl; )
 
     if( mode > 0 )
     {
-        if( m_bucket[ bucket_no ]->isEmpty() && m_bucket[ bucket_no ]->getDepth() > 1 )
-            merge( bucket_no );
+        if( m_bucket[ idx ]->isEmpty() && m_bucket[ idx ]->getDepth() > 1 )
+            merge( idx );
     }
     if( mode > 1 )
     {
@@ -240,8 +241,8 @@ void Directory::remove( const Key& key, int mode )
 //
 void Directory::update( const Key &key, const Data &value )
 {
-    const uint32_t bucket_no = get_index( key );
-    m_bucket[ bucket_no ]->update( key, value );
+    const uint32_t idx = get_index( key );
+    m_bucket[ idx ]->update( key, value );
 
     LOGGER( std::cout << "Value updated" << std::endl; )
 }
@@ -251,11 +252,11 @@ void Directory::update( const Key &key, const Data &value )
 //
 Data Directory::search( const Key& key ) const
 {
-    const uint32_t bucket_no = get_index( key );
+    const uint32_t idx = get_index( key );
 
-    LOGGER( std::cout << "Searching key " << key.ToString() << " in bucket " << bucket_id( bucket_no ) << std::endl; )
+    LOGGER( std::cout << "Searching key " << key.ToString() << " in bucket " << bucket_id( idx ) << std::endl; )
 
-    const Data value = m_bucket[ bucket_no ]->search( key );
+    const Data value = m_bucket[ idx ]->search( key );
     LOGGER( std::cout << "Value = " << value.ToString() << std::endl; )
 
     return value;
