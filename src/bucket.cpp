@@ -166,4 +166,12 @@ bool Bucket::hasKey( const Key &key ) const
     return ( m_values.find( key ) != m_values.end() );
 }
 
+//
+// Returns the size of directory when the Bucket was inserted into the directry.
+// This value is equal the distance between siblings into the directory, hence the name.
+//
+uint32_t Bucket::get_index_diff() const
+{
+    return ( 1U << m_depth );
+}
 

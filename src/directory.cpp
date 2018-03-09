@@ -139,7 +139,7 @@ void Directory::assign_to_siblings( uint32_t idx, Bucket* bp )
     const uint32_t local_depth = m_bucket[ idx ]->getDepth();
     const int32_t pair_index = get_pair_index( idx, local_depth );
 
-    const int32_t index_diff = 1 << local_depth;
+    const int32_t index_diff = m_bucket[ idx ]->get_index_diff();
     const int32_t dir_size = get_dir_size();
 
     m_bucket[ pair_index ] = bp;
@@ -160,7 +160,7 @@ void Directory::merge( uint32_t idx )
     const uint32_t local_depth = m_bucket[ idx ]->getDepth();
     const int32_t pair_index = get_pair_index( idx, local_depth );
 
-    const int32_t index_diff = 1 << local_depth;
+    const int32_t index_diff = m_bucket[ idx ]->get_index_diff();
     const int32_t dir_size = get_dir_size();
 
     Bucket *bp = m_bucket[ pair_index ];

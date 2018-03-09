@@ -34,6 +34,8 @@ public:
     void display() const;
     bool hasKey( const Key& key ) const;
 
+    uint32_t get_index_diff() const;
+
 private:
     uint32_t m_depth;
     const uint32_t m_maxAllowedSize;
