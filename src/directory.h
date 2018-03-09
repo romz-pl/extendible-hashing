@@ -25,8 +25,6 @@ public:
     size_t count() const;
 
 private:
-    // static uint32_t get_pair_index( uint32_t idx, uint32_t depth );
-
     uint32_t get_index( const Key &key ) const;
     void grow();
     void shrink();

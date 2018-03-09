@@ -67,20 +67,6 @@ uint32_t Directory::get_index( const Key& key ) const
     return v;
 }
 
-/*
-//
-// Flips "depth-1" bit in "idx".
-// Return the resulting value.
-//
-uint32_t Directory::get_pair_index( uint32_t idx, uint32_t depth )
-{
-    assert( depth > 0 );
-    const uint32_t ss = 1U << ( depth - 1U );
-    const uint32_t v = idx ^ ss; 
-    return v;
-}
-*/
-
 //
 //
 //
