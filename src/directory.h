@@ -36,6 +36,8 @@ private:
 
     void assign_to_siblings( uint32_t idx, Bucket* bp );
 
+    uint32_t get_dir_size() const;
+
 private:
     uint32_t m_global_depth;
     const uint32_t m_max_bucket_size;

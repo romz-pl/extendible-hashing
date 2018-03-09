@@ -22,7 +22,7 @@ Directory::Directory( uint32_t depth, uint32_t max_bucket_size )
     , m_max_bucket_size( max_bucket_size )
     , m_count( 0 )
 {
-    const uint32_t ss = 1U << m_global_depth;
+    const uint32_t ss = get_dir_size();
     m_bucket.reserve( ss );
     for( size_t i = 0 ; i < ss ; i++ )
     {
@@ -61,7 +61,7 @@ Directory::~Directory()
 uint32_t Directory::get_index( const Key& key ) const
 {
     const uint32_t n = key.GetHash();
-    // const uint32_t ss = ( 1U << m_global_depth );
+    // const uint32_t ss = get_dir_size();
     // const uint32_t v = n & ( ss - 1 );
     const uint32_t v = n & ~( (~0) << m_global_depth );
     return v;
@@ -84,11 +84,11 @@ uint32_t Directory::get_pair_index( uint32_t idx, uint32_t depth )
 //
 void Directory::grow()
 {
-    const size_t ss = m_bucket.size();
-    assert( ss == 1U << m_global_depth );
+    const uint32_t ss = get_dir_size();
+    assert( ss == static_cast< uint32_t >( m_bucket.size() ) );
 
     m_bucket.reserve( 2 * ss );
-    for( size_t i = 0 ; i < ss ; i++ )
+    for( uint32_t i = 0 ; i < ss ; i++ )
         m_bucket.push_back( m_bucket[ i ] );
 
     m_global_depth++;
@@ -107,7 +107,7 @@ void Directory::shrink()
         }
     }
     m_global_depth--;
-    const uint32_t ss = 1U << m_global_depth;
+    const uint32_t ss = get_dir_size();
     for( uint32_t i = 0 ; i < ss; i++ )
         m_bucket.pop_back();
 }
@@ -140,7 +140,7 @@ void Directory::assign_to_siblings( uint32_t idx, Bucket* bp )
     const int32_t pair_index = get_pair_index( idx, local_depth );
 
     const int32_t index_diff = 1 << local_depth;
-    const int32_t dir_size = 1 << m_global_depth;
+    const int32_t dir_size = get_dir_size();
 
     m_bucket[ pair_index ] = bp;
 
@@ -161,7 +161,7 @@ void Directory::merge( uint32_t idx )
     const int32_t pair_index = get_pair_index( idx, local_depth );
 
     const int32_t index_diff = 1 << local_depth;
-    const int32_t dir_size = 1 << m_global_depth;
+    const int32_t dir_size = get_dir_size();
 
     Bucket *bp = m_bucket[ pair_index ];
 
@@ -318,3 +318,12 @@ size_t Directory::count() const
 {
     return m_count;
 }
+
+//
+// Returns current size of the directory
+//
+uint32_t Directory::get_dir_size() const
+{
+    return ( 1U << m_global_depth );
+}
+
