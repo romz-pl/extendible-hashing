@@ -169,29 +169,6 @@ void Directory::merge( uint32_t idx )
     }
 }
 
-//
-//
-//
-std::string Directory::bucket_id( uint32_t n ) const
-{
-    std::string s;
-    uint32_t d = m_bucket[ n ]->getDepth();
-
-    while( n > 0 && d > 0 )
-    {
-        s = ( n % 2 == 0 ? "0" : "1" ) + s;
-        n /= 2;
-        d--;
-    }
-
-    while( d > 0 )
-    {
-        s = "0" + s;
-        d--;
-    }
-
-    return s;
-}
 
 //
 //
@@ -204,7 +181,7 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
     if( b->hasKey( key ) )
     {
         std::stringstream buffer;
-        buffer << "Key " << key.ToString() << " already exists in bucket " << bucket_id( idx );
+        buffer << "Key " << key.ToString() << " already exists in bucket " << b->get_id_as_string( idx );
         throw std::runtime_error( buffer.str() );
     }
 
@@ -219,11 +196,11 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
     if( !reinserted )
     {
         m_count++;
-        LOGGER( std::cout << "Inserted key " << key.ToString() << " in bucket " << bucket_id( idx ) << std::endl; )
+        LOGGER( std::cout << "Inserted key " << key.ToString() << " in bucket " << b->get_id_as_string( idx ) << std::endl; )
     }
     else
     {
-        LOGGER( std::cout << "Moved key " << key.ToString() << " to bucket " << bucket_id( idx ) << std::endl; )
+        LOGGER( std::cout << "Moved key " << key.ToString() << " to bucket " << b->get_id_as_string( idx ) << std::endl; )
     }
 
 }
@@ -238,7 +215,7 @@ void Directory::remove( const Key& key, int mode )
     b->remove( key );
     m_count--;
 
-    LOGGER( std::cout << "Deleted key " << key.ToString() << " from bucket " << bucket_id( idx ) << std::endl; )
+    LOGGER( std::cout << "Deleted key " << key.ToString() << " from bucket " << b->get_id_as_string( idx ) << std::endl; )
 
     if( mode > 0 )
     {
@@ -269,7 +246,7 @@ Data Directory::search( const Key& key ) const
 {
     const uint32_t idx = get_index( key );
 
-    LOGGER( std::cout << "Searching key " << key.ToString() << " in bucket " << bucket_id( idx ) << std::endl; )
+    LOGGER( std::cout << "Searching key " << key.ToString() << " in bucket " << m_bucket[ idx ]->get_id_as_string( idx ) << std::endl; )
 
     const Data value = m_bucket[ idx ]->search( key );
     LOGGER( std::cout << "Value = " << value.ToString() << std::endl; )
@@ -288,7 +265,7 @@ void Directory::display( bool duplicates ) const
     for( std::size_t i = 0; i < m_bucket.size(); i++ )
     {
         const uint32_t d = m_bucket[ i ]->getDepth();
-        const std::string s = bucket_id( i );
+        const std::string s = m_bucket[ i ]->get_id_as_string( i );
         if( duplicates || shown.find( s ) == shown.end() )
         {
             shown.insert( s );

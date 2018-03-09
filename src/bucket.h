@@ -37,6 +37,8 @@ public:
     uint32_t get_index_diff() const;
     uint32_t get_pair_index( uint32_t idx ) const;
 
+    std::string get_id_as_string( uint32_t n ) const;
+
 private:
     uint32_t m_depth;
     const uint32_t m_maxAllowedSize;

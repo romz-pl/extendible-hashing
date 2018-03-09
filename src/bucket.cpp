@@ -187,4 +187,28 @@ uint32_t Bucket::get_pair_index( uint32_t idx ) const
     return v;
 }
 
+//
+// Returns string representation of bucket idenyfier
+//
+std::string Bucket::get_id_as_string( uint32_t n ) const
+{
+    std::string s;
+    uint32_t d = m_depth;
+
+    while( n > 0 && d > 0 )
+    {
+        s = ( n % 2 == 0 ? "0" : "1" ) + s;
+        n /= 2;
+        d--;
+    }
+
+    while( d > 0 )
+    {
+        s = "0" + s;
+        d--;
+    }
+
+    return s;
+}
+
 
