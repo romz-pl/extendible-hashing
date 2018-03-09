@@ -67,6 +67,7 @@ uint32_t Directory::get_index( const Key& key ) const
     return v;
 }
 
+/*
 //
 // Flips "depth-1" bit in "idx".
 // Return the resulting value.
@@ -78,6 +79,7 @@ uint32_t Directory::get_pair_index( uint32_t idx, uint32_t depth )
     const uint32_t v = idx ^ ss; 
     return v;
 }
+*/
 
 //
 //
@@ -136,8 +138,7 @@ void Directory::split( uint32_t idx )
 //
 void Directory::assign_to_siblings( uint32_t idx, Bucket* bp )
 {
-    const uint32_t local_depth = m_bucket[ idx ]->getDepth();
-    const int32_t pair_index = get_pair_index( idx, local_depth );
+    const int32_t pair_index = m_bucket[ idx ]->get_pair_index( idx );
 
     const int32_t index_diff = m_bucket[ idx ]->get_index_diff();
     const int32_t dir_size = get_dir_size();
@@ -158,7 +159,7 @@ void Directory::assign_to_siblings( uint32_t idx, Bucket* bp )
 void Directory::merge( uint32_t idx )
 {
     const uint32_t local_depth = m_bucket[ idx ]->getDepth();
-    const int32_t pair_index = get_pair_index( idx, local_depth );
+    const int32_t pair_index = m_bucket[ idx ]->get_pair_index( idx );
 
     const int32_t index_diff = m_bucket[ idx ]->get_index_diff();
     const int32_t dir_size = get_dir_size();

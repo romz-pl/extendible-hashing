@@ -175,3 +175,16 @@ uint32_t Bucket::get_index_diff() const
     return ( 1U << m_depth );
 }
 
+//
+// Flips "m_depth-1" bit in "idx".
+// Return the resulting value.
+//
+uint32_t Bucket::get_pair_index( uint32_t idx ) const
+{
+    assert( m_depth > 0 );
+    const uint32_t ss = 1U << ( m_depth - 1U ); // Why -1 ??
+    const uint32_t v = idx ^ ss; 
+    return v;
+}
+
+

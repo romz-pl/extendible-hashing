@@ -35,6 +35,7 @@ public:
     bool hasKey( const Key& key ) const;
 
     uint32_t get_index_diff() const;
+    uint32_t get_pair_index( uint32_t idx ) const;
 
 private:
     uint32_t m_depth;
