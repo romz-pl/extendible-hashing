@@ -121,27 +121,35 @@ void Directory::split( uint32_t idx )
     if( local_depth > m_global_depth )
         grow();
 
-    const int32_t pair_index = get_pair_index( idx, local_depth );
-    assert( m_bucket[ pair_index ] == m_bucket[ idx ] );
-
     const auto temp = m_bucket[ idx ]->copy();
     m_bucket[ idx ]->clear();
+
+    Bucket *bp = new Bucket( local_depth, m_max_bucket_size );
+    assign_to_siblings( idx, bp );
+
+    for( const auto v : temp )
+        insert( v.first, v.second, true );
+}
+
+//
+// Assign the pointer "bp" to all sibling of the bucket with index "idx" 
+//
+void Directory::assign_to_siblings( uint32_t idx, Bucket* bp )
+{
+    const uint32_t local_depth = m_bucket[ idx ]->getDepth();
+    const int32_t pair_index = get_pair_index( idx, local_depth );
 
     const int32_t index_diff = 1 << local_depth;
     const int32_t dir_size = 1 << m_global_depth;
 
-    m_bucket[ pair_index ] = new Bucket( local_depth, m_max_bucket_size );
-    Bucket *bp = m_bucket[ pair_index ];
-
+    m_bucket[ pair_index ] = bp;
 
     for( int32_t i = pair_index - index_diff ; i >= 0 ; i -= index_diff )
         m_bucket[ i ] = bp;
-
+    
     for( int32_t i = pair_index + index_diff ; i < dir_size ; i += index_diff )
         m_bucket[ i ] = bp;
 
-    for( const auto v : temp )
-        insert( v.first, v.second, true );
 }
 
 //

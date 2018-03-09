@@ -34,6 +34,7 @@ private:
     void merge( uint32_t idx );
     std::string bucket_id( uint32_t n ) const;
 
+    void assign_to_siblings( uint32_t idx, Bucket* bp );
 
 private:
     uint32_t m_global_depth;
