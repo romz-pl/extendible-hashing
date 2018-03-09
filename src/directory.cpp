@@ -151,20 +151,24 @@ void Directory::merge( uint32_t idx )
 {
     const uint32_t local_depth = m_bucket[ idx ]->getDepth();
     const int32_t pair_index = get_pair_index( idx, local_depth );
+
     const int32_t index_diff = 1 << local_depth;
     const int32_t dir_size = 1 << m_global_depth;
 
-    if( m_bucket[ pair_index ]->getDepth() == local_depth )
+    Bucket *bp = m_bucket[ pair_index ];
+
+    if( bp->getDepth() == local_depth )
     {
-        m_bucket[ pair_index ]->decreaseDepth();
+        bp->decreaseDepth();
+
         delete m_bucket[ idx ];
-        m_bucket[ idx ] = m_bucket[ pair_index ];
+        m_bucket[ idx ] = bp;
 
         for( int32_t i = idx - index_diff ; i >= 0 ; i -= index_diff )
-            m_bucket[ i ] = m_bucket[ pair_index ];
+            m_bucket[ i ] = bp;
 
         for( int32_t i = idx + index_diff ; i < dir_size ; i += index_diff )
-            m_bucket[ i ] = m_bucket[ pair_index ];
+            m_bucket[ i ] = bp;
     }
 }
 
@@ -233,14 +237,15 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
 void Directory::remove( const Key& key, int mode )
 {
     const uint32_t idx = get_index( key );
-    m_bucket[ idx ]->remove( key );
+    Bucket *b = m_bucket[ idx ];
+    b->remove( key );
     m_count--;
 
     LOGGER( std::cout << "Deleted key " << key.ToString() << " from bucket " << bucket_id( idx ) << std::endl; )
 
     if( mode > 0 )
     {
-        if( m_bucket[ idx ]->isEmpty() && m_bucket[ idx ]->getDepth() > 1 )
+        if( b->isEmpty() && b->getDepth() > 1 )
             merge( idx );
     }
     if( mode > 1 )
