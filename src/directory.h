@@ -25,7 +25,6 @@ public:
     size_t count() const;
 
 private:
-    uint32_t get_index( const Key &key ) const;
     void grow();
     void shrink();
     void split( uint32_t idx );
