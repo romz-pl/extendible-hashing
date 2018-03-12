@@ -68,7 +68,7 @@ bool Data::operator>=( const Data& v ) const
 //
 //
 //
-std::string Data::ToString() const
+std::string Data::to_string() const
 {
     return m_data;
 }

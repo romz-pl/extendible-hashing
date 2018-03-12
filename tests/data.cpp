@@ -69,7 +69,7 @@ TEST(data, ToString)
         const std::string v = GetRandomString( pick ( g ) );
 
         const Data data( v );
-        EXPECT_TRUE( data.ToString() == v );
+        EXPECT_TRUE( data.to_string() == v );
     }
 }
 

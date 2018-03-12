@@ -77,7 +77,7 @@ void Directory::shrink()
 {
     for( size_t i = 0 ; i < m_bucket.size() ; i++ )
     {
-        if( m_bucket[ i ]->getDepth() == m_global_depth )
+        if( m_bucket[ i ]->get_depth() == m_global_depth )
         {
             return;
         }
@@ -93,7 +93,7 @@ void Directory::shrink()
 //
 void Directory::split( uint32_t idx )
 {
-    const uint32_t local_depth = m_bucket[ idx ]->increaseDepth();
+    const uint32_t local_depth = m_bucket[ idx ]->increase_depth();
     if( local_depth > m_global_depth )
         grow();
 
@@ -139,9 +139,9 @@ void Directory::merge( uint32_t idx )
 
     Bucket *bp = m_bucket[ pair_index ];
 
-    if( bp->getDepth() == b->getDepth() )
+    if( bp->get_depth() == b->get_depth() )
     {
-        bp->decreaseDepth();
+        bp->decrease_depth();
 
         delete b;
 
@@ -169,11 +169,11 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
     if( b->hasKey( key ) )
     {
         std::stringstream buffer;
-        buffer << "Key " << key.ToString() << " already exists in bucket " << b->get_id_as_string( idx );
+        buffer << "Key " << key.to_string() << " already exists in bucket " << b->get_id_as_string( idx );
         throw std::runtime_error( buffer.str() );
     }
 
-    if( b->isFull() )
+    if( b->is_full() )
     {
         split( idx );
         insert( key, value, reinserted );
@@ -184,11 +184,11 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
     if( !reinserted )
     {
         m_count++;
-        LOGGER( std::cout << "Inserted key " << key.ToString() << " in bucket " << b->get_id_as_string( idx ) << std::endl; )
+        LOGGER( std::cout << "Inserted key " << key.to_string() << " in bucket " << b->get_id_as_string( idx ) << std::endl; )
     }
     else
     {
-        LOGGER( std::cout << "Moved key " << key.ToString() << " to bucket " << b->get_id_as_string( idx ) << std::endl; )
+        LOGGER( std::cout << "Moved key " << key.to_string() << " to bucket " << b->get_id_as_string( idx ) << std::endl; )
     }
 
 }
@@ -203,11 +203,11 @@ void Directory::remove( const Key& key, int mode )
     b->remove( key );
     m_count--;
 
-    LOGGER( std::cout << "Deleted key " << key.ToString() << " from bucket " << b->get_id_as_string( idx ) << std::endl; )
+    LOGGER( std::cout << "Deleted key " << key.to_string() << " from bucket " << b->get_id_as_string( idx ) << std::endl; )
 
     if( mode > 0 )
     {
-        if( b->isEmpty() && b->getDepth() > 1 )
+        if( b->is_empty() && b->get_depth() > 1 )
             merge( idx );
     }
     if( mode > 1 )
@@ -234,10 +234,10 @@ Data Directory::search( const Key& key ) const
 {
     const uint32_t idx = Index::get( key, m_global_depth );
 
-    LOGGER( std::cout << "Searching key " << key.ToString() << " in bucket " << m_bucket[ idx ]->get_id_as_string( idx ) << std::endl; )
+    LOGGER( std::cout << "Searching key " << key.to_string() << " in bucket " << m_bucket[ idx ]->get_id_as_string( idx ) << std::endl; )
 
     const Data value = m_bucket[ idx ]->search( key );
-    LOGGER( std::cout << "Value = " << value.ToString() << std::endl; )
+    LOGGER( std::cout << "Value = " << value.to_string() << std::endl; )
 
     return value;
 }
@@ -252,7 +252,7 @@ void Directory::display( bool duplicates ) const
 
     for( std::size_t i = 0; i < m_bucket.size(); i++ )
     {
-        const uint32_t d = m_bucket[ i ]->getDepth();
+        const uint32_t d = m_bucket[ i ]->get_depth();
         const std::string s = m_bucket[ i ]->get_id_as_string( i );
         if( duplicates || shown.find( s ) == shown.end() )
         {

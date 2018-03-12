@@ -21,11 +21,11 @@ void Bucket::insert( const Key& key, const Data &value )
     if( m_values.find( key ) != m_values.end() )
     {
         std::stringstream buffer;
-        buffer << "Cannot insert. Key '" << key.ToString() << "' already exists.";
+        buffer << "Cannot insert. Key '" << key.to_string() << "' already exists.";
         throw std::runtime_error( buffer.str() );    
     }
 
-    if( isFull() )
+    if( is_full() )
     {
         throw std::runtime_error( "Cannot insert key into the bucket. The bucket is full." );
     }
@@ -42,7 +42,7 @@ void Bucket::remove( const Key& key )
     if( it == m_values.end() )
     {
         std::stringstream buffer;
-        buffer << "Cannot remove. Key '" << key.ToString() << "' does not exists.";
+        buffer << "Cannot remove. Key '" << key.to_string() << "' does not exists.";
         throw std::runtime_error( buffer.str() );
     }
 
@@ -58,7 +58,7 @@ void Bucket::update( const Key &key, const Data &value )
     if( it == m_values.end() )
     {
         std::stringstream buffer;
-        buffer << "Cannot update. Key '" << key.ToString() << "' does not exist.";
+        buffer << "Cannot update. Key '" << key.to_string() << "' does not exist.";
         throw std::runtime_error( buffer.str() );
     }
 
@@ -74,7 +74,7 @@ Data Bucket::search( const Key& key ) const
     if( it == m_values.end() )
     {
         std::stringstream buffer;
-        buffer << "Not found. Key '" << key.ToString() << "' does not exists.";
+        buffer << "Not found. Key '" << key.to_string() << "' does not exists.";
         throw std::runtime_error( buffer.str() );
     }
 
@@ -84,7 +84,7 @@ Data Bucket::search( const Key& key ) const
 //
 //
 //
-bool Bucket::isFull() const
+bool Bucket::is_full() const
 {
     return ( m_values.size() == m_maxAllowedSize );
 }
@@ -92,7 +92,7 @@ bool Bucket::isFull() const
 //
 //
 //
-bool Bucket::isEmpty() const
+bool Bucket::is_empty() const
 {
     return m_values.empty();
 }
@@ -100,7 +100,7 @@ bool Bucket::isEmpty() const
 //
 //
 //
-uint32_t Bucket::getDepth() const
+uint32_t Bucket::get_depth() const
 {
     return m_depth;
 }
@@ -108,7 +108,7 @@ uint32_t Bucket::getDepth() const
 //
 //
 //
-uint32_t Bucket::increaseDepth()
+uint32_t Bucket::increase_depth()
 {
     m_depth++;
     return m_depth;
@@ -117,7 +117,7 @@ uint32_t Bucket::increaseDepth()
 //
 //
 //
-uint32_t Bucket::decreaseDepth()
+uint32_t Bucket::decrease_depth()
 {
     if( m_depth == 0 )
     {
@@ -151,7 +151,7 @@ void Bucket::display() const
     std::string txt;
     for( const auto& v : m_values )
     {
-        txt = "(" + v.first.ToString() + ";" + v.second.ToString() + ")";
+        txt = "(" + v.first.to_string() + ";" + v.second.to_string() + ")";
         std::cout << txt << " ";
     }
 

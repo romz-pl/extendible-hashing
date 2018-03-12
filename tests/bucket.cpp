@@ -98,15 +98,15 @@ TEST(bucket, full_empty)
 
     Bucket bucket( depth, maxAllowedSize );
     
-    EXPECT_TRUE( !bucket.isFull( ) );
-    EXPECT_TRUE( bucket.isEmpty( ) );
+    EXPECT_TRUE( !bucket.is_full( ) );
+    EXPECT_TRUE( bucket.is_empty( ) );
     
     for( uint32_t i = 0; i < maxAllowedSize; i++ )
     {
         EXPECT_NO_THROW( bucket.insert( Key( i ), Data( "a" ) ) );
     }
-    EXPECT_TRUE( bucket.isFull( ) );
-    EXPECT_TRUE( !bucket.isEmpty( ) );
+    EXPECT_TRUE( bucket.is_full( ) );
+    EXPECT_TRUE( !bucket.is_empty( ) );
 }
 
 //
@@ -119,18 +119,18 @@ TEST(bucket, depth)
 
     Bucket bucket( depth, maxAllowedSize );
     
-    EXPECT_TRUE( bucket.getDepth() == depth );
+    EXPECT_TRUE( bucket.get_depth() == depth );
     
     for( uint32_t i = 0; i < depth; i++ )
     {
-        EXPECT_NO_THROW( bucket.decreaseDepth() );
-        EXPECT_TRUE( bucket.getDepth() == depth - i - 1 );
+        EXPECT_NO_THROW( bucket.decrease_depth() );
+        EXPECT_TRUE( bucket.get_depth() == depth - i - 1 );
     }
     
-    EXPECT_ANY_THROW( bucket.decreaseDepth() );
+    EXPECT_ANY_THROW( bucket.decrease_depth() );
     
-    EXPECT_NO_THROW( bucket.increaseDepth() );
-    EXPECT_TRUE( bucket.getDepth() == 1 );
+    EXPECT_NO_THROW( bucket.increase_depth() );
+    EXPECT_TRUE( bucket.get_depth() == 1 );
 }
 
 //
@@ -147,7 +147,7 @@ TEST(bucket, copy)
     
     for( auto k : key )
     {
-        EXPECT_NO_THROW( bucket.insert( k, Data( "a" + k.ToString() ) ) );
+        EXPECT_NO_THROW( bucket.insert( k, Data( "a" + k.to_string() ) ) );
     }
     
     std::map< Key, Data >  cp = bucket.copy();
@@ -168,16 +168,16 @@ TEST(bucket, clear)
 
     Bucket bucket( depth, maxAllowedSize );
     
-    EXPECT_TRUE( bucket.isEmpty( ) );
+    EXPECT_TRUE( bucket.is_empty( ) );
     for( size_t i = 0; i < 4; i++ )
     {
         const Data data( "a" + std::to_string( i ) );
         EXPECT_NO_THROW( bucket.insert( Key( i ), data ) );
-        EXPECT_TRUE( !bucket.isEmpty( ) );
+        EXPECT_TRUE( !bucket.is_empty( ) );
     }
     
     EXPECT_NO_THROW( bucket.clear() );
-    EXPECT_TRUE( bucket.isEmpty( ) );
+    EXPECT_TRUE( bucket.is_empty( ) );
 }
 
 
@@ -214,7 +214,7 @@ TEST(bucket, display)
     
     for( auto k : key )
     {
-        EXPECT_NO_THROW( bucket.insert( k, Data( "a" + k.ToString() ) ) );
+        EXPECT_NO_THROW( bucket.insert( k, Data( "a" + k.to_string() ) ) );
     }
     
     bucket.display();

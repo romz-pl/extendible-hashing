@@ -6,7 +6,7 @@
 //  
 uint32_t Index::get( const Key& key, uint32_t depth )
 {
-    const uint32_t hash = key.GetHash();
+    const uint32_t hash = key.get_hash();
     const uint32_t mask = get_mask( depth );
     return ( hash & mask );
 }

@@ -32,7 +32,7 @@ public:
     bool operator> ( const Data& v ) const;
     bool operator>=( const Data& v ) const; 
 
-    std::string ToString() const;
+    std::string to_string() const;
 
 private:
     std::string m_data;
