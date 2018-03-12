@@ -5,11 +5,11 @@
 //
 //
 //
-Key::Key( uint32_t value ) :
-    Key( &value, sizeof( value ) )
+Key::Key( uint32_t value ) : Key( &value, sizeof( value ) )
 {
 
 }
+
 
 //
 // count - number of bytes to copy
@@ -46,10 +46,10 @@ uint32_t Key::get_hash() const
 //
 bool Key::operator==( const Key& key ) const
 {
-//    return ( m_blob.size() == key.m_blob.size() &&
-//             std::memcmp( m_blob.data(), key.m_blob.data(), m_blob.size() ) == 0 );
+    return ( m_blob.size() == key.m_blob.size() &&
+             std::memcmp( m_blob.data(), key.m_blob.data(), m_blob.size() ) == 0 );
 
-    return get_hash() == key.get_hash();
+//    return get_hash() == key.get_hash();
 }
 
 //
@@ -57,7 +57,7 @@ bool Key::operator==( const Key& key ) const
 //
 bool Key::operator<( const Key& key ) const
 {
-/*
+
     const size_t s = std::min( m_blob.size(), key.m_blob.size() );
     const int ret = std::memcmp( m_blob.data(), key.m_blob.data(), s );
 
@@ -67,9 +67,9 @@ bool Key::operator<( const Key& key ) const
     if( ret > 0 )
         return false;
 
-    return ( m_blob.size() < key.m_blob.size() ); */
+    return ( m_blob.size() < key.m_blob.size() );
 
-    return get_hash() < key.get_hash();
+    //return get_hash() < key.get_hash();
 }
 
 //

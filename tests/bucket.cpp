@@ -14,10 +14,10 @@ TEST(bucket, Insert)
 
     Bucket bucket( depth, maxAllowedSize );
     
-    EXPECT_NO_THROW( bucket.insert( Key( 0 ), Data( "a" ) ) );
+    EXPECT_NO_THROW( bucket.insert( Key( 0U ), Data( "a" ) ) );
     
     // Duplication
-    EXPECT_ANY_THROW( bucket.insert( Key( 0 ), Data( "a" ) ) );
+    EXPECT_ANY_THROW( bucket.insert( Key( 0U ), Data( "a" ) ) );
     
     for( uint32_t i = 1; i < maxAllowedSize; i++ )
     {

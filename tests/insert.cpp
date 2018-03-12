@@ -14,7 +14,7 @@ std::vector< Key > GenerateKeys()
 {
     // Number of tested keys.
     // Chenge this value, if needed!
-    const std::size_t eltNo = 14000;
+    const std::size_t eltNo = 140;
 
     std::vector< Key > key;
     key.reserve( eltNo );
