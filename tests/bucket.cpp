@@ -196,7 +196,7 @@ TEST(bucket, hasKey)
         const Key key( i );
         const Data data( "a" + std::to_string( i ) );
         EXPECT_NO_THROW( bucket.insert( key, data ) );
-        EXPECT_TRUE( bucket.hasKey( key ) ); 
+        EXPECT_TRUE( bucket.has_key( key ) ); 
     }
 }
 
