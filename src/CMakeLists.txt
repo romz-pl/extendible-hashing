@@ -6,6 +6,7 @@ bucket.cpp
 data.cpp
 directory.cpp
 hashex.cpp
+index.cpp
 key.cpp
 )
 

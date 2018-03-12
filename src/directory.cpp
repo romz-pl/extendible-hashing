@@ -1,8 +1,9 @@
-#include "directory.h"
 #include <iostream>
 #include <set>
 #include <cassert>
 #include <sstream>
+#include "directory.h"
+#include "index.h"
 
 //
 //
@@ -22,7 +23,7 @@ Directory::Directory( uint32_t depth, uint32_t max_bucket_size )
     , m_max_bucket_size( max_bucket_size )
     , m_count( 0 )
 {
-    const uint32_t ss = 1U << m_global_depth;
+    const uint32_t ss = get_dir_size();
     m_bucket.reserve( ss );
     for( size_t i = 0 ; i < ss ; i++ )
     {
@@ -55,40 +56,15 @@ Directory::~Directory()
 }
 
 //
-// Extracts least significant m_global_depth bits from key's hash.
-// Returns index of the bucket for given "key".
-//
-uint32_t Directory::get_index( const Key& key ) const
-{
-    const uint32_t n = key.GetHash();
-    // const uint32_t ss = ( 1U << m_global_depth );
-    // const uint32_t v = n & ( ss - 1 );
-    const uint32_t v = n & ~( (~0) << m_global_depth );
-    return v;
-}
-
-//
-// Flips "depth-1" bit in "idx".
-// Return the resulting value.
-//
-uint32_t Directory::get_pair_index( uint32_t idx, uint32_t depth )
-{
-    assert( depth > 0 );
-    const uint32_t ss = 1U << ( depth - 1U );
-    const uint32_t v = idx ^ ss; 
-    return v;
-}
-
-//
 //
 //
 void Directory::grow()
 {
-    const size_t ss = m_bucket.size();
-    assert( ss == 1U << m_global_depth );
+    const uint32_t ss = get_dir_size();
+    assert( ss == static_cast< uint32_t >( m_bucket.size() ) );
 
     m_bucket.reserve( 2 * ss );
-    for( size_t i = 0 ; i < ss ; i++ )
+    for( uint32_t i = 0 ; i < ss ; i++ )
         m_bucket.push_back( m_bucket[ i ] );
 
     m_global_depth++;
@@ -101,13 +77,13 @@ void Directory::shrink()
 {
     for( size_t i = 0 ; i < m_bucket.size() ; i++ )
     {
-        if( m_bucket[ i ]->getDepth() == m_global_depth )
+        if( m_bucket[ i ]->get_depth() == m_global_depth )
         {
             return;
         }
     }
     m_global_depth--;
-    const uint32_t ss = 1U << m_global_depth;
+    const uint32_t ss = get_dir_size();
     for( uint32_t i = 0 ; i < ss; i++ )
         m_bucket.pop_back();
 }
@@ -117,28 +93,38 @@ void Directory::shrink()
 //
 void Directory::split( uint32_t idx )
 {
-    const uint32_t local_depth = m_bucket[ idx ]->increaseDepth();
+    const uint32_t local_depth = m_bucket[ idx ]->increase_depth();
     if( local_depth > m_global_depth )
         grow();
 
-    const int32_t pair_index = get_pair_index( idx, local_depth );
-    assert( m_bucket[ pair_index ] == m_bucket[ idx ] );
-
-    m_bucket[ pair_index ] = new Bucket( local_depth, m_max_bucket_size );
-
     const auto temp = m_bucket[ idx ]->copy();
     m_bucket[ idx ]->clear();
-    const int32_t index_diff = 1 << local_depth;
-    const int32_t dir_size = 1 << m_global_depth;
 
-    for( int32_t i = pair_index - index_diff ; i >= 0 ; i -= index_diff )
-        m_bucket[ i ] = m_bucket[ pair_index ];
-
-    for( int32_t i = pair_index + index_diff ; i < dir_size ; i += index_diff )
-        m_bucket[ i ] = m_bucket[ pair_index ];
+    Bucket *bp = new Bucket( local_depth, m_max_bucket_size );
+    assign_to_siblings( idx, bp );
 
     for( const auto v : temp )
         insert( v.first, v.second, true );
+}
+
+//
+// Assign the pointer "bp" to all sibling of the bucket with index "idx" 
+//
+void Directory::assign_to_siblings( uint32_t idx, Bucket* bp )
+{
+    const int32_t pair_index = m_bucket[ idx ]->get_pair_index( idx );
+
+    const int32_t index_diff = m_bucket[ idx ]->get_index_diff();
+    const int32_t dir_size = get_dir_size();
+
+    m_bucket[ pair_index ] = bp;
+
+    for( int32_t i = pair_index - index_diff ; i >= 0 ; i -= index_diff )
+        m_bucket[ i ] = bp;
+    
+    for( int32_t i = pair_index + index_diff ; i < dir_size ; i += index_diff )
+        m_bucket[ i ] = bp;
+
 }
 
 //
@@ -146,65 +132,48 @@ void Directory::split( uint32_t idx )
 //
 void Directory::merge( uint32_t idx )
 {
-    const uint32_t local_depth = m_bucket[ idx ]->getDepth();
-    const int32_t pair_index = get_pair_index( idx, local_depth );
-    const int32_t index_diff = 1 << local_depth;
-    const int32_t dir_size = 1 << m_global_depth;
+    Bucket *b = m_bucket[ idx ];
 
-    if( m_bucket[ pair_index ]->getDepth() == local_depth )
+    const int32_t pair_index = b->get_pair_index( idx );
+    const int32_t index_diff = b->get_index_diff();
+
+    Bucket *bp = m_bucket[ pair_index ];
+
+    if( bp->get_depth() == b->get_depth() )
     {
-        m_bucket[ pair_index ]->decreaseDepth();
-        delete m_bucket[ idx ];
-        m_bucket[ idx ] = m_bucket[ pair_index ];
+        bp->decrease_depth();
+
+        delete b;
+
+        // Assign values to siblings buckets
+        m_bucket[ idx ] = bp;
 
         for( int32_t i = idx - index_diff ; i >= 0 ; i -= index_diff )
-            m_bucket[ i ] = m_bucket[ pair_index ];
+            m_bucket[ i ] = bp;
 
+        const int32_t dir_size = get_dir_size();
         for( int32_t i = idx + index_diff ; i < dir_size ; i += index_diff )
-            m_bucket[ i ] = m_bucket[ pair_index ];
+            m_bucket[ i ] = bp;
     }
 }
 
-//
-//
-//
-std::string Directory::bucket_id( uint32_t n ) const
-{
-    std::string s;
-    uint32_t d = m_bucket[ n ]->getDepth();
-
-    while( n > 0 && d > 0 )
-    {
-        s = ( n % 2 == 0 ? "0" : "1" ) + s;
-        n /= 2;
-        d--;
-    }
-
-    while( d > 0 )
-    {
-        s = "0" + s;
-        d--;
-    }
-
-    return s;
-}
 
 //
 //
 //
 void Directory::insert( const Key &key, const Data &value, bool reinserted )
 {
-    const uint32_t idx = get_index( key );
+    const uint32_t idx = Index::get( key, m_global_depth );
 
     Bucket* b = m_bucket[ idx ];
     if( b->hasKey( key ) )
     {
         std::stringstream buffer;
-        buffer << "Key " << key.ToString() << " already exists in bucket " << bucket_id( idx );
+        buffer << "Key " << key.to_string() << " already exists in bucket " << b->get_id_as_string( idx );
         throw std::runtime_error( buffer.str() );
     }
 
-    if( b->isFull() )
+    if( b->is_full() )
     {
         split( idx );
         insert( key, value, reinserted );
@@ -215,11 +184,11 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
     if( !reinserted )
     {
         m_count++;
-        LOGGER( std::cout << "Inserted key " << key.ToString() << " in bucket " << bucket_id( idx ) << std::endl; )
+        LOGGER( std::cout << "Inserted key " << key.to_string() << " in bucket " << b->get_id_as_string( idx ) << std::endl; )
     }
     else
     {
-        LOGGER( std::cout << "Moved key " << key.ToString() << " to bucket " << bucket_id( idx ) << std::endl; )
+        LOGGER( std::cout << "Moved key " << key.to_string() << " to bucket " << b->get_id_as_string( idx ) << std::endl; )
     }
 
 }
@@ -229,15 +198,16 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
 //
 void Directory::remove( const Key& key, int mode )
 {
-    const uint32_t idx = get_index( key );
-    m_bucket[ idx ]->remove( key );
+    const uint32_t idx = Index::get( key, m_global_depth );
+    Bucket *b = m_bucket[ idx ];
+    b->remove( key );
     m_count--;
 
-    LOGGER( std::cout << "Deleted key " << key.ToString() << " from bucket " << bucket_id( idx ) << std::endl; )
+    LOGGER( std::cout << "Deleted key " << key.to_string() << " from bucket " << b->get_id_as_string( idx ) << std::endl; )
 
     if( mode > 0 )
     {
-        if( m_bucket[ idx ]->isEmpty() && m_bucket[ idx ]->getDepth() > 1 )
+        if( b->is_empty() && b->get_depth() > 1 )
             merge( idx );
     }
     if( mode > 1 )
@@ -251,7 +221,7 @@ void Directory::remove( const Key& key, int mode )
 //
 void Directory::update( const Key &key, const Data &value )
 {
-    const uint32_t idx = get_index( key );
+    const uint32_t idx = Index::get( key, m_global_depth );
     m_bucket[ idx ]->update( key, value );
 
     LOGGER( std::cout << "Value updated" << std::endl; )
@@ -262,12 +232,12 @@ void Directory::update( const Key &key, const Data &value )
 //
 Data Directory::search( const Key& key ) const
 {
-    const uint32_t idx = get_index( key );
+    const uint32_t idx = Index::get( key, m_global_depth );
 
-    LOGGER( std::cout << "Searching key " << key.ToString() << " in bucket " << bucket_id( idx ) << std::endl; )
+    LOGGER( std::cout << "Searching key " << key.to_string() << " in bucket " << m_bucket[ idx ]->get_id_as_string( idx ) << std::endl; )
 
     const Data value = m_bucket[ idx ]->search( key );
-    LOGGER( std::cout << "Value = " << value.ToString() << std::endl; )
+    LOGGER( std::cout << "Value = " << value.to_string() << std::endl; )
 
     return value;
 }
@@ -282,8 +252,8 @@ void Directory::display( bool duplicates ) const
 
     for( std::size_t i = 0; i < m_bucket.size(); i++ )
     {
-        const uint32_t d = m_bucket[ i ]->getDepth();
-        const std::string s = bucket_id( i );
+        const uint32_t d = m_bucket[ i ]->get_depth();
+        const std::string s = m_bucket[ i ]->get_id_as_string( i );
         if( duplicates || shown.find( s ) == shown.end() )
         {
             shown.insert( s );
@@ -302,3 +272,12 @@ size_t Directory::count() const
 {
     return m_count;
 }
+
+//
+// Returns current size of the directory
+//
+uint32_t Directory::get_dir_size() const
+{
+    return ( 1U << m_global_depth );
+}
+

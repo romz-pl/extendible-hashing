@@ -65,7 +65,7 @@ TEST(key, ToString)
     {
         const uint32_t v = pick( g );
         const Key key( v );
-        EXPECT_TRUE( !key.ToString().empty() );
+        EXPECT_TRUE( !key.to_string().empty() );
     }
 }
 
@@ -83,7 +83,7 @@ TEST(key, GetHash)
     {
         const uint32_t v = pick( g );
         const Key key( v );
-        EXPECT_NO_THROW( key.GetHash() );
+        EXPECT_NO_THROW( key.get_hash() );
     }
 }
 

@@ -13,16 +13,16 @@ Key::Key( uint32_t value )
 //
 //
 //
-uint32_t Key::GetHash() const
+uint32_t Key::get_hash() const
 {
     // return Hash64( m_value );
-    return Hash32( m_value );
+    return get_hash_32( m_value );
 }
 
 //
 //
 //
-uint32_t Key::Hash32( uint32_t x )
+uint32_t Key::get_hash_32( uint32_t x )
 {
     const uint32_t a = 0x45d9f3b;
 
@@ -97,7 +97,7 @@ bool Key::operator>=( const Key& key ) const
 //
 //
 //
-std::string Key::ToString() const
+std::string Key::to_string() const
 {
     return std::to_string( m_value );
 }

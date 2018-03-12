@@ -25,7 +25,7 @@ public:
     Key( Key && ) = default;
     Key& operator=( Key && ) = default;
 
-    uint32_t GetHash() const;
+    uint32_t get_hash() const;
 
     bool operator==( const Key& key ) const;
     bool operator!=( const Key& key ) const;
@@ -35,11 +35,11 @@ public:
     bool operator> ( const Key& key ) const;
     bool operator>=( const Key& key ) const; 
 
-    std::string ToString() const;
+    std::string to_string() const;
 
 private:
 //    static uint64_t Hash64( uint64_t x );
-    static uint32_t Hash32( uint32_t x );
+    static uint32_t get_hash_32( uint32_t x );
 
 private:
     uint32_t m_value;

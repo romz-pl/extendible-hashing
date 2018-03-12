@@ -25,15 +25,13 @@ public:
     size_t count() const;
 
 private:
-    static uint32_t get_pair_index( uint32_t idx, uint32_t depth );
-
-    uint32_t get_index( const Key &key ) const;
     void grow();
     void shrink();
     void split( uint32_t idx );
     void merge( uint32_t idx );
-    std::string bucket_id( uint32_t n ) const;
 
+    void assign_to_siblings( uint32_t idx, Bucket* bp );
+    uint32_t get_dir_size() const;
 
 private:
     uint32_t m_global_depth;
