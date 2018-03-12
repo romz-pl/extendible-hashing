@@ -26,7 +26,28 @@ TEST(key, Compare)
         if( v1 != v2 )
         {
             EXPECT_TRUE( Key( v1 ) != Key( v2 ) );
-        }        
+        }
+        
+        if( v1 < v2 )
+        {
+            // EXPECT_TRUE( Key( v1 ) < Key( v2 ) );
+        }
+        
+        if( v1 <= v2 )
+        {
+            // EXPECT_TRUE( Key( v1 ) <= Key( v2 ) );
+        }
+        
+        if( v1 > v2 )
+        {
+            // EXPECT_TRUE( Key( v1 ) > Key( v2 ) );
+        }
+        
+        if( v1 >= v2 )
+        {
+            // EXPECT_TRUE( Key( v1 ) >= Key( v2 ) );
+        }
+        
     }
 }
 
