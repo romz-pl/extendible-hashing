@@ -166,7 +166,7 @@ void Directory::insert( const Key &key, const Data &value, bool reinserted )
     const uint32_t idx = Index::get( key, m_global_depth );
 
     Bucket* b = m_bucket[ idx ];
-    if( b->hasKey( key ) )
+    if( b->has_key( key ) )
     {
         std::stringstream buffer;
         buffer << "Key " << key.to_string() << " already exists in bucket " << b->get_id_as_string( idx );

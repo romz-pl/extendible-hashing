@@ -32,7 +32,7 @@ public:
     std::map< Key, Data > copy() const;
     void clear();
     void display() const;
-    bool hasKey( const Key& key ) const;
+    bool has_key( const Key& key ) const;
 
     uint32_t get_index_diff() const;
     uint32_t get_pair_index( uint32_t idx ) const;
