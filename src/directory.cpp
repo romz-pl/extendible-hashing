@@ -5,6 +5,8 @@
 #include "directory.h"
 #include "index.h"
 
+#define NOLOGGING
+
 //
 //
 //
@@ -68,6 +70,7 @@ void Directory::grow()
         m_bucket.push_back( m_bucket[ i ] );
 
     m_global_depth++;
+    std::cout << "get_dir_size=" << get_dir_size() << "\n";
 }
 
 //
