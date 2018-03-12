@@ -12,11 +12,13 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 class Key
 {
 public:
     explicit Key( uint32_t value );
+    Key( const void* buf, uint32_t count );
     ~Key() = default;
 
     Key( const Key & ) = default;
@@ -38,11 +40,7 @@ public:
     std::string to_string() const;
 
 private:
-//    static uint64_t Hash64( uint64_t x );
-    static uint32_t get_hash_32( uint32_t x );
-
-private:
-    uint32_t m_value;
+    std::vector< uint8_t > m_blob;
 };
 
 #endif
